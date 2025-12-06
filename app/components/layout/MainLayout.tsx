@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 import { useAuthStore } from '../../stores/authStore';
@@ -15,9 +15,17 @@ export function MainLayout({ children }: MainLayoutProps) {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
   const { initializeSampleData } = useProductStore();
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Esperar a que Zustand se hidrate desde localStorage
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
-    // Verificar autenticación
+    // Solo verificar autenticación después de la hidratación
+    if (!isHydrated) return;
+
     if (!isAuthenticated) {
       router.push('/login');
       return;
@@ -25,12 +33,31 @@ export function MainLayout({ children }: MainLayoutProps) {
 
     // Inicializar datos de ejemplo
     initializeSampleData();
-  }, [isAuthenticated, router, initializeSampleData]);
+  }, [isHydrated, isAuthenticated, router, initializeSampleData]);
 
-  if (!isAuthenticated) {
+  // Mostrar loading mientras se hidrata o no está autenticado
+  if (!isHydrated || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#030712]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-400/70"></div>
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#030712'
+      }}>
+        <div style={{
+          width: '48px',
+          height: '48px',
+          border: '2px solid rgba(59, 130, 246, 0.2)',
+          borderTopColor: '#3b82f6',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }} />
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }

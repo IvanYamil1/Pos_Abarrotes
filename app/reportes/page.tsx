@@ -2,21 +2,14 @@
 
 import React, { useState, useMemo } from 'react';
 import { MainLayout } from '../components/layout/MainLayout';
-import { Card, CardHeader } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Badge } from '../components/ui/Badge';
 import { useSalesStore } from '../stores/salesStore';
 import { useProductStore } from '../stores/productStore';
 import { useCashRegisterStore } from '../stores/cashRegisterStore';
 import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import {
-  FiCalendar,
-  FiTrendingUp,
-  FiTrendingDown,
   FiDollarSign,
-  FiPackage,
+  FiTrendingUp,
   FiShoppingCart,
   FiDownload,
   FiBarChart2,
@@ -28,7 +21,7 @@ type DateRange = 'today' | 'week' | 'month' | 'custom';
 export default function ReportesPage() {
   const { sales } = useSalesStore();
   const { products } = useProductStore();
-  const { registers, expenses } = useCashRegisterStore();
+  const { expenses } = useCashRegisterStore();
 
   const [dateRange, setDateRange] = useState<DateRange>('today');
   const [customStartDate, setCustomStartDate] = useState('');
@@ -201,34 +194,85 @@ export default function ReportesPage() {
 
   return (
     <MainLayout>
-      <div className="p-6">
+      <div style={{ padding: '20px', background: '#030712', minHeight: '100vh' }}>
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div style={{ marginBottom: '48px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Reportes</h1>
-            <p className="text-gray-500">
-              {format(start, "d 'de' MMMM", { locale: es })} -{' '}
-              {format(end, "d 'de' MMMM yyyy", { locale: es })}
+            <h1 style={{
+              fontSize: '14px',
+              fontWeight: '500',
+              color: 'rgba(255, 255, 255, 0.6)',
+              marginBottom: '12px',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase'
+            }}>
+              Reportes
+            </h1>
+            <p style={{
+              color: 'rgba(255, 255, 255, 0.4)',
+              fontSize: '14px',
+              fontWeight: '300',
+              letterSpacing: '0.02em'
+            }}>
+              {format(start, "d 'de' MMMM", { locale: es })} - {format(end, "d 'de' MMMM yyyy", { locale: es })}
             </p>
           </div>
-          <Button variant="primary" icon={<FiDownload />} onClick={exportToPDF}>
+          <button
+            onClick={exportToPDF}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 20px',
+              background: '#3b82f6',
+              border: 'none',
+              borderRadius: '2px',
+              color: 'white',
+              fontSize: '13px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              letterSpacing: '0.02em',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(59, 130, 246, 0.8)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#3b82f6';
+            }}
+          >
+            <FiDownload size={16} />
             Exportar PDF
-          </Button>
+          </button>
         </div>
 
         {/* Date Range Selector */}
-        <Card className="mb-6">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex gap-2">
+        <div style={{
+          background: '#1d1d1d',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '2px',
+          padding: '20px',
+          marginBottom: '32px'
+        }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
               {dateRangeOptions.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => setDateRange(option.value as DateRange)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    dateRange === option.value
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
+                  style={{
+                    padding: '10px 20px',
+                    background: dateRange === option.value ? '#3b82f6' : '#2a2a2a',
+                    border: '1px solid',
+                    borderColor: dateRange === option.value ? '#3b82f6' : 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    color: dateRange === option.value ? 'white' : 'rgba(255, 255, 255, 0.6)',
+                    fontSize: '13px',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    letterSpacing: '0.02em'
+                  }}
                 >
                   {option.label}
                 </button>
@@ -236,298 +280,460 @@ export default function ReportesPage() {
             </div>
 
             {dateRange === 'custom' && (
-              <div className="flex gap-2 items-center">
-                <Input
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <input
                   type="date"
                   value={customStartDate}
                   onChange={(e) => setCustomStartDate(e.target.value)}
-                  className="w-40"
+                  style={{
+                    padding: '10px 14px',
+                    background: '#2a2a2a',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    color: 'white',
+                    fontSize: '13px',
+                    width: '160px'
+                  }}
                 />
-                <span className="text-gray-400">a</span>
-                <Input
+                <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '13px' }}>a</span>
+                <input
                   type="date"
                   value={customEndDate}
                   onChange={(e) => setCustomEndDate(e.target.value)}
-                  className="w-40"
+                  style={{
+                    padding: '10px 14px',
+                    background: '#2a2a2a',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    color: 'white',
+                    fontSize: '13px',
+                    width: '160px'
+                  }}
                 />
               </div>
             )}
           </div>
-        </Card>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          <Card>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <FiDollarSign className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Ventas Totales</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  ${stats.totalSales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <FiTrendingUp className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Ganancia Bruta</p>
-                <p className="text-2xl font-bold text-green-600">
-                  ${stats.totalProfit.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <FiShoppingCart className="w-6 h-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Transacciones</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.totalTransactions}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                <FiBarChart2 className="w-6 h-6 text-orange-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Ticket Promedio</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  ${stats.averageTicket.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                </p>
-              </div>
-            </div>
-          </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Stats Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '24px',
+          marginBottom: '32px'
+        }}>
+          {[
+            {
+              title: 'Ventas Totales',
+              value: `$${stats.totalSales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`,
+              icon: FiDollarSign,
+              iconColor: '#3b82f6'
+            },
+            {
+              title: 'Ganancia Bruta',
+              value: `$${stats.totalProfit.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`,
+              icon: FiTrendingUp,
+              iconColor: '#10b981',
+              valueColor: '#10b981'
+            },
+            {
+              title: 'Transacciones',
+              value: stats.totalTransactions.toString(),
+              icon: FiShoppingCart,
+              iconColor: '#8b5cf6'
+            },
+            {
+              title: 'Ticket Promedio',
+              value: `$${stats.averageTicket.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`,
+              icon: FiBarChart2,
+              iconColor: '#f59e0b'
+            }
+          ].map((stat) => (
+            <div
+              key={stat.title}
+              style={{
+                background: '#1d1d1d',
+                borderRadius: '2px',
+                padding: '24px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.5)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+              }}
+            >
+              <p style={{
+                fontSize: '11px',
+                fontWeight: '500',
+                color: 'rgba(255, 255, 255, 0.5)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.15em',
+                marginBottom: '16px'
+              }}>
+                {stat.title}
+              </p>
+              <p style={{
+                fontSize: '36px',
+                fontWeight: '300',
+                color: stat.valueColor || 'white',
+                marginBottom: '8px',
+                letterSpacing: '-0.02em',
+                lineHeight: '1'
+              }}>
+                {stat.value}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px' }}>
           {/* Payment Methods */}
-          <Card>
-            <CardHeader title="Ventas por Método de Pago" />
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 bg-green-500 rounded"></div>
-                  <span>Efectivo</span>
+          <div style={{
+            background: '#1d1d1d',
+            borderRadius: '2px',
+            padding: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <h2 style={{
+              fontSize: '11px',
+              fontWeight: '500',
+              color: 'rgba(255, 255, 255, 0.5)',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              marginBottom: '24px',
+              paddingBottom: '16px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              Ventas por Método de Pago
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Efectivo */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '12px', height: '12px', background: '#10b981', borderRadius: '2px' }}></div>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', fontWeight: '400' }}>Efectivo</span>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ fontWeight: '400', color: 'white', fontSize: '14px' }}>
+                      ${stats.cashSales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                    </p>
+                    <p style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)' }}>
+                      {stats.totalSales > 0 ? ((stats.cashSales / stats.totalSales) * 100).toFixed(1) : 0}%
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-gray-900">
-                    ${stats.cashSales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {stats.totalSales > 0
-                      ? ((stats.cashSales / stats.totalSales) * 100).toFixed(1)
-                      : 0}
-                    %
-                  </p>
+                <div style={{ width: '100%', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '2px', height: '6px' }}>
+                  <div style={{
+                    background: '#10b981',
+                    height: '6px',
+                    borderRadius: '2px',
+                    width: `${stats.totalSales > 0 ? (stats.cashSales / stats.totalSales) * 100 : 0}%`,
+                    transition: 'width 0.3s ease'
+                  }}></div>
                 </div>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-green-500 h-2 rounded-full"
-                  style={{
-                    width: `${
-                      stats.totalSales > 0
-                        ? (stats.cashSales / stats.totalSales) * 100
-                        : 0
-                    }%`,
-                  }}
-                ></div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 bg-blue-500 rounded"></div>
-                  <span>Tarjeta</span>
+              {/* Tarjeta */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '12px', height: '12px', background: '#3b82f6', borderRadius: '2px' }}></div>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', fontWeight: '400' }}>Tarjeta</span>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ fontWeight: '400', color: 'white', fontSize: '14px' }}>
+                      ${stats.cardSales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                    </p>
+                    <p style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)' }}>
+                      {stats.totalSales > 0 ? ((stats.cardSales / stats.totalSales) * 100).toFixed(1) : 0}%
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-gray-900">
-                    ${stats.cardSales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {stats.totalSales > 0
-                      ? ((stats.cardSales / stats.totalSales) * 100).toFixed(1)
-                      : 0}
-                    %
-                  </p>
+                <div style={{ width: '100%', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '2px', height: '6px' }}>
+                  <div style={{
+                    background: '#3b82f6',
+                    height: '6px',
+                    borderRadius: '2px',
+                    width: `${stats.totalSales > 0 ? (stats.cardSales / stats.totalSales) * 100 : 0}%`,
+                    transition: 'width 0.3s ease'
+                  }}></div>
                 </div>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-blue-500 h-2 rounded-full"
-                  style={{
-                    width: `${
-                      stats.totalSales > 0
-                        ? (stats.cardSales / stats.totalSales) * 100
-                        : 0
-                    }%`,
-                  }}
-                ></div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 bg-orange-500 rounded"></div>
-                  <span>Vales</span>
+              {/* Vales */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '12px', height: '12px', background: '#f59e0b', borderRadius: '2px' }}></div>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', fontWeight: '400' }}>Vales</span>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ fontWeight: '400', color: 'white', fontSize: '14px' }}>
+                      ${stats.voucherSales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                    </p>
+                    <p style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)' }}>
+                      {stats.totalSales > 0 ? ((stats.voucherSales / stats.totalSales) * 100).toFixed(1) : 0}%
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-gray-900">
-                    ${stats.voucherSales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {stats.totalSales > 0
-                      ? ((stats.voucherSales / stats.totalSales) * 100).toFixed(1)
-                      : 0}
-                    %
-                  </p>
+                <div style={{ width: '100%', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '2px', height: '6px' }}>
+                  <div style={{
+                    background: '#f59e0b',
+                    height: '6px',
+                    borderRadius: '2px',
+                    width: `${stats.totalSales > 0 ? (stats.voucherSales / stats.totalSales) * 100 : 0}%`,
+                    transition: 'width 0.3s ease'
+                  }}></div>
                 </div>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-orange-500 h-2 rounded-full"
-                  style={{
-                    width: `${
-                      stats.totalSales > 0
-                        ? (stats.voucherSales / stats.totalSales) * 100
-                        : 0
-                    }%`,
-                  }}
-                ></div>
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* Profit Summary */}
-          <Card>
-            <CardHeader title="Resumen de Ganancias" />
-            <div className="space-y-4">
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Ventas Totales</span>
-                  <span className="font-bold text-gray-900">
+          <div style={{
+            background: '#1d1d1d',
+            borderRadius: '2px',
+            padding: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <h2 style={{
+              fontSize: '11px',
+              fontWeight: '500',
+              color: 'rgba(255, 255, 255, 0.5)',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              marginBottom: '24px',
+              paddingBottom: '16px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              Resumen de Ganancias
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{
+                padding: '16px',
+                background: 'rgba(59, 130, 246, 0.1)',
+                border: '1px solid rgba(59, 130, 246, 0.2)',
+                borderRadius: '2px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px' }}>Ventas Totales</span>
+                  <span style={{ fontWeight: '400', color: 'white', fontSize: '14px' }}>
                     ${stats.totalSales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
-              <div className="p-4 bg-red-50 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Costo de Productos</span>
-                  <span className="font-bold text-red-600">
+
+              <div style={{
+                padding: '16px',
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.2)',
+                borderRadius: '2px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px' }}>Costo de Productos</span>
+                  <span style={{ fontWeight: '400', color: '#ef4444', fontSize: '14px' }}>
                     -${stats.totalCost.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
-              <div className="p-4 bg-green-50 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Ganancia Bruta</span>
-                  <span className="font-bold text-green-600">
+
+              <div style={{
+                padding: '16px',
+                background: 'rgba(16, 185, 129, 0.1)',
+                border: '1px solid rgba(16, 185, 129, 0.2)',
+                borderRadius: '2px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px' }}>Ganancia Bruta</span>
+                  <span style={{ fontWeight: '400', color: '#10b981', fontSize: '14px' }}>
                     ${stats.totalProfit.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
-              <div className="p-4 bg-orange-50 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Gastos</span>
-                  <span className="font-bold text-orange-600">
+
+              <div style={{
+                padding: '16px',
+                background: 'rgba(245, 158, 11, 0.1)',
+                border: '1px solid rgba(245, 158, 11, 0.2)',
+                borderRadius: '2px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px' }}>Gastos</span>
+                  <span style={{ fontWeight: '400', color: '#f59e0b', fontSize: '14px' }}>
                     -${stats.totalExpenses.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
-              <div className="p-4 bg-purple-100 rounded-lg border-2 border-purple-200">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold text-gray-900">
-                    Ganancia Neta
-                  </span>
-                  <span
-                    className={`text-2xl font-bold ${
-                      stats.netProfit >= 0 ? 'text-green-600' : 'text-red-600'
-                    }`}
-                  >
+
+              <div style={{
+                padding: '20px',
+                background: 'rgba(139, 92, 246, 0.1)',
+                border: '1px solid rgba(139, 92, 246, 0.3)',
+                borderRadius: '2px',
+                marginTop: '8px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'white', fontSize: '14px', fontWeight: '500' }}>Ganancia Neta</span>
+                  <span style={{
+                    fontWeight: '300',
+                    color: stats.netProfit >= 0 ? '#10b981' : '#ef4444',
+                    fontSize: '24px',
+                    letterSpacing: '-0.02em'
+                  }}>
                     ${stats.netProfit.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* Top Products */}
-        <Card>
-          <CardHeader title="Productos Más Vendidos" subtitle="Top 10 del período" />
+        <div style={{
+          background: '#1d1d1d',
+          borderRadius: '2px',
+          padding: '24px',
+          border: '1px solid rgba(255, 255, 255, 0.1)'
+        }}>
+          <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <h2 style={{
+              fontSize: '11px',
+              fontWeight: '500',
+              color: 'rgba(255, 255, 255, 0.5)',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              marginBottom: '4px'
+            }}>
+              Productos Más Vendidos
+            </h2>
+            <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.3)' }}>Top 10 del período</p>
+          </div>
+
           {stats.topProducts.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">
-              No hay ventas en este período
-            </p>
+            <div style={{ textAlign: 'center', padding: '40px 20px', color: 'rgba(255, 255, 255, 0.3)' }}>
+              <p style={{ fontSize: '13px', fontWeight: '300', letterSpacing: '0.02em' }}>No hay ventas en este período</p>
+            </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
-                      #
-                    </th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
-                      Producto
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600">
-                      Cantidad
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600">
-                      Ingresos
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600">
-                      Costo
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600">
-                      Ganancia
-                    </th>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                    <th style={{
+                      padding: '12px 16px',
+                      textAlign: 'left',
+                      fontSize: '11px',
+                      fontWeight: '500',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em'
+                    }}>#</th>
+                    <th style={{
+                      padding: '12px 16px',
+                      textAlign: 'left',
+                      fontSize: '11px',
+                      fontWeight: '500',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em'
+                    }}>Producto</th>
+                    <th style={{
+                      padding: '12px 16px',
+                      textAlign: 'right',
+                      fontSize: '11px',
+                      fontWeight: '500',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em'
+                    }}>Cantidad</th>
+                    <th style={{
+                      padding: '12px 16px',
+                      textAlign: 'right',
+                      fontSize: '11px',
+                      fontWeight: '500',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em'
+                    }}>Ingresos</th>
+                    <th style={{
+                      padding: '12px 16px',
+                      textAlign: 'right',
+                      fontSize: '11px',
+                      fontWeight: '500',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em'
+                    }}>Costo</th>
+                    <th style={{
+                      padding: '12px 16px',
+                      textAlign: 'right',
+                      fontSize: '11px',
+                      fontWeight: '500',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em'
+                    }}>Ganancia</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody>
                   {stats.topProducts.map((product, index) => (
-                    <tr key={product.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 text-sm">
-                        <Badge
-                          variant={
-                            index === 0
-                              ? 'success'
-                              : index === 1
-                              ? 'info'
-                              : index === 2
-                              ? 'warning'
-                              : 'default'
-                          }
-                        >
+                    <tr
+                      key={product.id}
+                      style={{
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                      }}
+                    >
+                      <td style={{ padding: '16px' }}>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '24px',
+                          height: '24px',
+                          borderRadius: '2px',
+                          fontSize: '11px',
+                          fontWeight: '500',
+                          background: index === 0 ? 'rgba(16, 185, 129, 0.2)' :
+                                     index === 1 ? 'rgba(59, 130, 246, 0.2)' :
+                                     index === 2 ? 'rgba(245, 158, 11, 0.2)' :
+                                     'rgba(255, 255, 255, 0.1)',
+                          color: index === 0 ? '#10b981' :
+                                index === 1 ? '#3b82f6' :
+                                index === 2 ? '#f59e0b' :
+                                'rgba(255, 255, 255, 0.5)',
+                          border: `1px solid ${
+                            index === 0 ? 'rgba(16, 185, 129, 0.3)' :
+                            index === 1 ? 'rgba(59, 130, 246, 0.3)' :
+                            index === 2 ? 'rgba(245, 158, 11, 0.3)' :
+                            'rgba(255, 255, 255, 0.2)'
+                          }`
+                        }}>
                           {index + 1}
-                        </Badge>
+                        </span>
                       </td>
-                      <td className="px-4 py-3 font-medium text-gray-900">
+                      <td style={{ padding: '16px', color: 'white', fontSize: '14px', fontWeight: '400' }}>
                         {product.name}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm">
+                      <td style={{ padding: '16px', textAlign: 'right', color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>
                         {product.quantity}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm font-medium">
+                      <td style={{ padding: '16px', textAlign: 'right', color: 'white', fontSize: '14px', fontWeight: '400' }}>
                         ${product.revenue.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm text-gray-500">
+                      <td style={{ padding: '16px', textAlign: 'right', color: 'rgba(255, 255, 255, 0.4)', fontSize: '14px' }}>
                         ${product.cost.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm font-medium text-green-600">
+                      <td style={{ padding: '16px', textAlign: 'right', color: '#10b981', fontSize: '14px', fontWeight: '400' }}>
                         ${product.profit.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                       </td>
                     </tr>
@@ -536,7 +742,7 @@ export default function ReportesPage() {
               </table>
             </div>
           )}
-        </Card>
+        </div>
       </div>
     </MainLayout>
   );

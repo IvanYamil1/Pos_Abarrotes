@@ -2,14 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { MainLayout } from '../components/layout/MainLayout';
-import { Card, CardHeader } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
 import { useStoreConfigStore } from '../stores/storeConfig';
 import { useAuthStore } from '../stores/authStore';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { FiSave, FiShoppingBag, FiInfo } from 'react-icons/fi';
+import { FiSave, FiShoppingBag, FiInfo, FiMapPin, FiPhone, FiFileText } from 'react-icons/fi';
 
 export default function ConfiguracionPage() {
   const router = useRouter();
@@ -52,136 +49,439 @@ export default function ConfiguracionPage() {
 
   return (
     <MainLayout>
-      <div className="p-6">
+      <div style={{ padding: '20px', background: '#030712', minHeight: '100vh' }}>
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Configuración</h1>
-          <p className="text-gray-500">Configura los datos de tu tienda</p>
+        <div style={{ marginBottom: '48px' }}>
+          <h1 style={{
+            fontSize: '14px',
+            fontWeight: '500',
+            color: 'rgba(255, 255, 255, 0.6)',
+            marginBottom: '12px',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase'
+          }}>
+            Configuración
+          </h1>
+          <p style={{
+            color: 'rgba(255, 255, 255, 0.4)',
+            fontSize: '14px',
+            fontWeight: '300',
+            letterSpacing: '0.02em'
+          }}>
+            Configura los datos de tu tienda
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
           {/* Store Info */}
-          <Card>
-            <CardHeader
-              title="Información de la Tienda"
-              subtitle="Estos datos aparecerán en los tickets"
-            />
-            <div className="space-y-4">
-              <Input
-                label="Nombre de la Tienda"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Mi Tienda de Abarrotes"
-                icon={<FiShoppingBag />}
-              />
-              <Input
-                label="Dirección"
-                value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                placeholder="Calle Principal #123, Col. Centro"
-              />
-              <Input
-                label="Teléfono"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="555-123-4567"
-              />
-              <Input
-                label="RFC (opcional)"
-                value={formData.rfc}
-                onChange={(e) => setFormData({ ...formData, rfc: e.target.value })}
-                placeholder="XAXX010101000"
-              />
+          <div style={{
+            background: '#1d1d1d',
+            borderRadius: '2px',
+            padding: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <h2 style={{
+                fontSize: '11px',
+                fontWeight: '500',
+                color: 'rgba(255, 255, 255, 0.5)',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                marginBottom: '4px'
+              }}>
+                Información de la Tienda
+              </h2>
+              <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.3)' }}>
+                Estos datos aparecerán en los tickets
+              </p>
             </div>
-          </Card>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Nombre */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: '500',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  marginBottom: '8px',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase'
+                }}>
+                  Nombre de la Tienda
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <FiShoppingBag style={{
+                    position: 'absolute',
+                    left: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    fontSize: '16px'
+                  }} />
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Mi Tienda de Abarrotes"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px 12px 42px',
+                      background: '#2a2a2a',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '2px',
+                      color: 'white',
+                      fontSize: '14px',
+                      transition: 'border-color 0.3s ease'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Dirección */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: '500',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  marginBottom: '8px',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase'
+                }}>
+                  Dirección
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <FiMapPin style={{
+                    position: 'absolute',
+                    left: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    fontSize: '16px'
+                  }} />
+                  <input
+                    type="text"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    placeholder="Calle Principal #123, Col. Centro"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px 12px 42px',
+                      background: '#2a2a2a',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '2px',
+                      color: 'white',
+                      fontSize: '14px',
+                      transition: 'border-color 0.3s ease'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Teléfono */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: '500',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  marginBottom: '8px',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase'
+                }}>
+                  Teléfono
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <FiPhone style={{
+                    position: 'absolute',
+                    left: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    fontSize: '16px'
+                  }} />
+                  <input
+                    type="text"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="555-123-4567"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px 12px 42px',
+                      background: '#2a2a2a',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '2px',
+                      color: 'white',
+                      fontSize: '14px',
+                      transition: 'border-color 0.3s ease'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* RFC */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: '500',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  marginBottom: '8px',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase'
+                }}>
+                  RFC (opcional)
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <FiFileText style={{
+                    position: 'absolute',
+                    left: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    fontSize: '16px'
+                  }} />
+                  <input
+                    type="text"
+                    value={formData.rfc}
+                    onChange={(e) => setFormData({ ...formData, rfc: e.target.value })}
+                    placeholder="XAXX010101000"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px 12px 42px',
+                      background: '#2a2a2a',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '2px',
+                      color: 'white',
+                      fontSize: '14px',
+                      transition: 'border-color 0.3s ease'
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Ticket Settings */}
-          <Card>
-            <CardHeader
-              title="Configuración de Tickets"
-              subtitle="Personaliza los tickets de venta"
-            />
-            <div className="space-y-4">
+          <div style={{
+            background: '#1d1d1d',
+            borderRadius: '2px',
+            padding: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <h2 style={{
+                fontSize: '11px',
+                fontWeight: '500',
+                color: 'rgba(255, 255, 255, 0.5)',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                marginBottom: '4px'
+              }}>
+                Configuración de Tickets
+              </h2>
+              <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.3)' }}>
+                Personaliza los tickets de venta
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Pie de Ticket */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: '500',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  marginBottom: '8px',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase'
+                }}>
                   Pie de Ticket
                 </label>
                 <textarea
                   value={formData.ticketFooter}
-                  onChange={(e) =>
-                    setFormData({ ...formData, ticketFooter: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, ticketFooter: e.target.value })}
                   placeholder="¡Gracias por su compra!&#10;Vuelva pronto"
                   rows={4}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-all duration-200"
+                  style={{
+                    width: '100%',
+                    padding: '12px 14px',
+                    background: '#2a2a2a',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    color: 'white',
+                    fontSize: '14px',
+                    resize: 'vertical',
+                    minHeight: '100px',
+                    transition: 'border-color 0.3s ease'
+                  }}
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.3)', marginTop: '8px' }}>
                   Este texto aparecerá al final de cada ticket
                 </p>
               </div>
 
               {/* Preview */}
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm font-medium text-gray-700 mb-2">Vista Previa</p>
-                <div className="bg-white border border-gray-200 rounded p-4 font-mono text-sm">
-                  <div className="text-center mb-2">
-                    <p className="font-bold">{formData.name || 'Nombre de la Tienda'}</p>
-                    <p className="text-xs text-gray-500">{formData.address || 'Dirección'}</p>
-                    <p className="text-xs text-gray-500">Tel: {formData.phone || '000-000-0000'}</p>
+              <div style={{
+                padding: '16px',
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '2px'
+              }}>
+                <p style={{
+                  fontSize: '11px',
+                  fontWeight: '500',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  marginBottom: '12px',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase'
+                }}>
+                  Vista Previa
+                </p>
+                <div style={{
+                  background: 'white',
+                  borderRadius: '2px',
+                  padding: '16px',
+                  fontFamily: 'monospace',
+                  fontSize: '12px',
+                  color: '#1d1d1d'
+                }}>
+                  <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+                    <p style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                      {formData.name || 'Nombre de la Tienda'}
+                    </p>
+                    <p style={{ fontSize: '10px', color: '#666', marginBottom: '2px' }}>
+                      {formData.address || 'Dirección'}
+                    </p>
+                    <p style={{ fontSize: '10px', color: '#666', marginBottom: '2px' }}>
+                      Tel: {formData.phone || '000-000-0000'}
+                    </p>
                     {formData.rfc && (
-                      <p className="text-xs text-gray-500">RFC: {formData.rfc}</p>
+                      <p style={{ fontSize: '10px', color: '#666' }}>RFC: {formData.rfc}</p>
                     )}
                   </div>
-                  <div className="border-t border-dashed border-gray-300 my-2" />
-                  <p className="text-center text-xs text-gray-500">...</p>
-                  <div className="border-t border-dashed border-gray-300 my-2" />
-                  <p className="text-center text-xs whitespace-pre-line">
+                  <div style={{
+                    borderTop: '1px dashed #ccc',
+                    margin: '8px 0'
+                  }} />
+                  <p style={{ textAlign: 'center', fontSize: '10px', color: '#999' }}>...</p>
+                  <div style={{
+                    borderTop: '1px dashed #ccc',
+                    margin: '8px 0'
+                  }} />
+                  <p style={{
+                    textAlign: 'center',
+                    fontSize: '10px',
+                    whiteSpace: 'pre-line',
+                    color: '#666'
+                  }}>
                     {formData.ticketFooter || 'Pie de ticket'}
                   </p>
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
+        </div>
 
-          {/* System Info */}
-          <Card className="lg:col-span-2">
-            <CardHeader
-              title="Información del Sistema"
-              subtitle="Datos técnicos del sistema"
-            />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <FiInfo className="text-blue-600" />
-                  <span className="font-medium text-gray-900">Versión</span>
-                </div>
-                <p className="text-2xl font-bold text-blue-600">1.0.0</p>
+        {/* System Info */}
+        <div style={{
+          background: '#1d1d1d',
+          borderRadius: '2px',
+          padding: '24px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          marginBottom: '24px'
+        }}>
+          <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <h2 style={{
+              fontSize: '11px',
+              fontWeight: '500',
+              color: 'rgba(255, 255, 255, 0.5)',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              marginBottom: '4px'
+            }}>
+              Información del Sistema
+            </h2>
+            <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.3)' }}>
+              Datos técnicos del sistema
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            <div style={{
+              padding: '20px',
+              background: 'rgba(59, 130, 246, 0.1)',
+              border: '1px solid rgba(59, 130, 246, 0.2)',
+              borderRadius: '2px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <FiInfo style={{ color: '#3b82f6', fontSize: '16px' }} />
+                <span style={{ fontWeight: '500', color: 'rgba(255, 255, 255, 0.8)', fontSize: '13px' }}>Versión</span>
               </div>
-              <div className="p-4 bg-green-50 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <FiInfo className="text-green-600" />
-                  <span className="font-medium text-gray-900">Almacenamiento</span>
-                </div>
-                <p className="text-sm text-gray-600">LocalStorage (Navegador)</p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <FiInfo className="text-purple-600" />
-                  <span className="font-medium text-gray-900">Usuario</span>
-                </div>
-                <p className="text-sm text-gray-600">
-                  {user?.name} ({user?.role})
-                </p>
-              </div>
+              <p style={{ fontSize: '28px', fontWeight: '300', color: '#3b82f6', letterSpacing: '-0.02em' }}>1.0.0</p>
             </div>
-          </Card>
+
+            <div style={{
+              padding: '20px',
+              background: 'rgba(16, 185, 129, 0.1)',
+              border: '1px solid rgba(16, 185, 129, 0.2)',
+              borderRadius: '2px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <FiInfo style={{ color: '#10b981', fontSize: '16px' }} />
+                <span style={{ fontWeight: '500', color: 'rgba(255, 255, 255, 0.8)', fontSize: '13px' }}>Almacenamiento</span>
+              </div>
+              <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.6)' }}>LocalStorage (Navegador)</p>
+            </div>
+
+            <div style={{
+              padding: '20px',
+              background: 'rgba(139, 92, 246, 0.1)',
+              border: '1px solid rgba(139, 92, 246, 0.2)',
+              borderRadius: '2px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <FiInfo style={{ color: '#8b5cf6', fontSize: '16px' }} />
+                <span style={{ fontWeight: '500', color: 'rgba(255, 255, 255, 0.8)', fontSize: '13px' }}>Usuario</span>
+              </div>
+              <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.6)' }}>
+                {user?.name} ({user?.role})
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Save Button */}
-        <div className="mt-6 flex justify-end">
-          <Button variant="primary" icon={<FiSave />} onClick={handleSave}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button
+            onClick={handleSave}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 24px',
+              background: '#3b82f6',
+              border: 'none',
+              borderRadius: '2px',
+              color: 'white',
+              fontSize: '13px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              letterSpacing: '0.02em',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(59, 130, 246, 0.8)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#3b82f6';
+            }}
+          >
+            <FiSave size={16} />
             Guardar Configuración
-          </Button>
+          </button>
         </div>
       </div>
     </MainLayout>

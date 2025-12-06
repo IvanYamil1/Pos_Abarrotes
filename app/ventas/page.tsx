@@ -23,6 +23,8 @@ import {
   FiCheck,
   FiX,
   FiPrinter,
+  FiGrid,
+  FiList,
 } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -37,6 +39,7 @@ export default function VentasPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [showAllProducts, setShowAllProducts] = useState(true);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   // Modals
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
@@ -53,10 +56,22 @@ export default function VentasPage() {
 
   useEffect(() => {
     const activeProducts = products.filter((p) => p.isActive && p.stock > 0);
-    if (showAllProducts) {
+    if (showAllProducts && !searchQuery.trim()) {
       setSearchResults(activeProducts);
     }
-  }, [products, showAllProducts]);
+  }, [products, showAllProducts, searchQuery]);
+
+  // Búsqueda en tiempo real
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setShowAllProducts(true);
+      return;
+    }
+
+    setShowAllProducts(false);
+    const results = searchProducts(searchQuery);
+    setSearchResults(results);
+  }, [searchQuery, searchProducts]);
 
   useEffect(() => {
     if (paymentModalOpen) {
@@ -72,28 +87,23 @@ export default function VentasPage() {
     }
   }, [quantityModalOpen, selectedProduct]);
 
-  const handleSearch = (query: string) => {
-    if (!query.trim()) {
-      setShowAllProducts(true);
-      return;
-    }
+  const handleBarcodeSearch = (query: string) => {
+    if (!query.trim()) return;
 
-    setShowAllProducts(false);
+    // Buscar por código de barras exacto
     const productByBarcode = getProductByBarcode(query);
     if (productByBarcode) {
       handleAddToCart(productByBarcode);
       toast.success(`${productByBarcode.name} agregado`);
+      setSearchQuery('');
       return;
     }
 
-    const results = searchProducts(query);
-    setSearchResults(results);
-
-    if (results.length === 0) {
-      toast.error('Producto no encontrado');
-    } else if (results.length === 1) {
-      setSelectedProduct(results[0]);
+    // Si solo hay un resultado, agregarlo directamente
+    if (searchResults.length === 1) {
+      setSelectedProduct(searchResults[0]);
       setQuantityModalOpen(true);
+      setSearchQuery('');
     }
   };
 
@@ -201,8 +211,7 @@ export default function VentasPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleSearch(searchQuery);
-                  setSearchQuery('');
+                  handleBarcodeSearch(searchQuery);
                 }
               }}
               placeholder="Escanear código o buscar producto..."
@@ -252,32 +261,72 @@ export default function VentasPage() {
             }}>
               {showAllProducts ? 'Productos' : `Resultados (${searchResults.length})`}
             </span>
-            {!showAllProducts && (
-              <button
-                onClick={() => { setShowAllProducts(true); setSearchQuery(''); }}
-                style={{
-                  fontSize: '11px',
-                  color: 'rgba(59, 130, 246, 0.7)',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase'
-                }}
-              >
-                Ver todos
-              </button>
-            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {!showAllProducts && (
+                <button
+                  onClick={() => { setShowAllProducts(true); setSearchQuery(''); }}
+                  style={{
+                    fontSize: '11px',
+                    color: 'rgba(59, 130, 246, 0.7)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  Ver todos
+                </button>
+              )}
+              <div style={{ display: 'flex', gap: '4px' }}>
+                <button
+                  onClick={() => setViewMode('grid')}
+                  style={{
+                    padding: '6px',
+                    background: viewMode === 'grid' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                    border: '1px solid',
+                    borderColor: viewMode === 'grid' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    color: viewMode === 'grid' ? '#3b82f6' : 'rgba(255, 255, 255, 0.4)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <FiGrid size={14} />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  style={{
+                    padding: '6px',
+                    background: viewMode === 'list' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                    border: '1px solid',
+                    borderColor: viewMode === 'list' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    color: viewMode === 'list' ? '#3b82f6' : 'rgba(255, 255, 255, 0.4)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <FiList size={14} />
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Grid de productos */}
+          {/* Grid/Lista de productos */}
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '8px' }}>
             {searchResults.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(255, 255, 255, 0.3)' }}>
                 <FiPackage size={40} style={{ marginBottom: '16px', opacity: 0.5 }} />
                 <p style={{ fontSize: '13px', fontWeight: '300' }}>No se encontraron productos</p>
               </div>
-            ) : (
+            ) : viewMode === 'grid' ? (
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
@@ -371,6 +420,102 @@ export default function VentasPage() {
                   </div>
                 ))}
               </div>
+            ) : (
+              /* Vista de Lista */
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {searchResults.map((product) => (
+                  <div
+                    key={product.id}
+                    onClick={() => handleAddToCart(product)}
+                    style={{
+                      background: '#1d1d1d',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '2px',
+                      padding: '12px 16px',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '16px'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.5)'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                  >
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      background: '#2a2a2a',
+                      borderRadius: '2px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <FiPackage style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: '18px' }} />
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{
+                        fontWeight: '400',
+                        color: 'white',
+                        fontSize: '13px',
+                        marginBottom: '2px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}>
+                        {product.name}
+                      </p>
+                      <p style={{
+                        fontSize: '10px',
+                        color: 'rgba(255, 255, 255, 0.4)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        {getCategoryLabel(product.category)}
+                      </p>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <span style={{
+                        fontSize: '11px',
+                        color: product.stock <= product.minStock ? 'rgba(239, 68, 68, 0.8)' : 'rgba(255, 255, 255, 0.4)'
+                      }}>
+                        Stock: {product.stock}
+                      </span>
+
+                      {product.packagePrice && product.packageQuantity && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleAddToCart(product, true); }}
+                          style={{
+                            padding: '6px 10px',
+                            background: 'rgba(16, 185, 129, 0.1)',
+                            border: '1px solid rgba(16, 185, 129, 0.3)',
+                            borderRadius: '2px',
+                            color: 'rgba(16, 185, 129, 0.9)',
+                            fontSize: '10px',
+                            cursor: 'pointer',
+                            letterSpacing: '0.02em',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          Paq ${product.packagePrice}
+                        </button>
+                      )}
+
+                      <span style={{
+                        fontSize: '16px',
+                        fontWeight: '300',
+                        color: '#3b82f6',
+                        minWidth: '70px',
+                        textAlign: 'right'
+                      }}>
+                        ${product.salePrice.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>
@@ -453,7 +598,15 @@ export default function VentasPage() {
           {/* Items del carrito */}
           <div style={{ flex: 1, padding: '16px', overflowY: 'auto' }}>
             {cart.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(255, 255, 255, 0.3)' }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                padding: '60px 20px',
+                color: 'rgba(255, 255, 255, 0.3)'
+              }}>
                 <FiShoppingBag size={40} style={{ marginBottom: '16px', opacity: 0.5 }} />
                 <p style={{ fontSize: '13px', fontWeight: '300', marginBottom: '8px' }}>Carrito vacío</p>
                 <p style={{ fontSize: '11px', fontWeight: '300', opacity: 0.7 }}>Escanea o busca productos</p>
@@ -536,26 +689,22 @@ export default function VentasPage() {
                         >
                           <FiMinus size={12} />
                         </button>
-                        <input
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) => {
-                            const val = parseFloat(e.target.value);
-                            if (!isNaN(val) && val >= 0) updateCartItemQuantity(item.product.id, val);
-                          }}
+                        <span
                           style={{
-                            width: '50px',
+                            width: '40px',
                             height: '28px',
-                            textAlign: 'center',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                             background: '#1d1d1d',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
                             borderRadius: '2px',
                             color: 'white',
-                            fontSize: '13px',
-                            outline: 'none'
+                            fontSize: '13px'
                           }}
-                          step={item.product.unit === 'kilo' || item.product.unit === 'granel' ? '0.1' : '1'}
-                        />
+                        >
+                          {item.quantity}
+                        </span>
                         <button
                           onClick={() => updateCartItemQuantity(item.product.id, item.quantity + 1)}
                           style={{

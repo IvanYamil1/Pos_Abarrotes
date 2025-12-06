@@ -2,10 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FiUser, FiLock } from 'react-icons/fi';
+import { FiUser, FiLock, FiShoppingCart } from 'react-icons/fi';
 import { useAuthStore } from '../stores/authStore';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
 import toast, { Toaster } from 'react-hot-toast';
 
 export default function LoginPage() {
@@ -39,308 +37,216 @@ export default function LoginPage() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '16px',
-      background: 'linear-gradient(to bottom right, #0f172a, #1e293b)',
+      padding: '20px',
+      background: '#030712',
       position: 'relative',
       overflow: 'hidden'
     }}>
       <Toaster position="top-center" />
 
-      {/* Fondo con efecto de luz */}
+      {/* Fondo con efecto de luz sutil */}
       <div style={{
         position: 'absolute',
-        top: '0',
+        top: '-200px',
         left: '50%',
         transform: 'translateX(-50%)',
-        width: '800px',
-        height: '800px',
-        background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
+        width: '600px',
+        height: '600px',
+        background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)',
         pointerEvents: 'none'
       }} />
 
       <div style={{
         width: '100%',
-        maxWidth: '420px',
+        maxWidth: '400px',
         position: 'relative',
         zIndex: 10
       }}>
-        {/* Tarjeta principal */}
+        {/* Card principal */}
         <div style={{
-          background: 'white',
-          borderRadius: '24px',
-          padding: '40px 36px',
-          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)'
+          background: '#1d1d1d',
+          borderRadius: '2px',
+          padding: '40px 32px',
+          border: '1px solid rgba(255, 255, 255, 0.1)'
         }}>
 
           {/* Header */}
-          <div style={{ marginBottom: '32px', textAlign: 'left' }}>
+          <div style={{ marginBottom: '40px' }}>
             {/* Logo */}
             <div style={{
-              width: '56px',
-              height: '56px',
-              background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
-              borderRadius: '16px',
-              marginBottom: '20px',
+              width: '48px',
+              height: '48px',
+              background: 'rgba(59, 130, 246, 0.1)',
+              border: '1px solid rgba(59, 130, 246, 0.3)',
+              borderRadius: '2px',
+              marginBottom: '24px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 10px 20px rgba(59, 130, 246, 0.3)'
+              justifyContent: 'center'
             }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="9" cy="21" r="1"/>
-                <circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-              </svg>
+              <FiShoppingCart size={24} style={{ color: '#3b82f6' }} />
             </div>
 
             <h1 style={{
-              fontSize: '28px',
-              fontWeight: '700',
-              color: '#0f172a',
-              marginBottom: '6px',
-              letterSpacing: '-0.025em'
+              fontSize: '11px',
+              fontWeight: '500',
+              color: 'rgba(255, 255, 255, 0.5)',
+              marginBottom: '8px',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase'
             }}>
-              Bienvenido
+              Sistema POS
             </h1>
             <p style={{
-              color: '#64748b',
-              fontSize: '14px',
-              fontWeight: '400'
+              fontSize: '24px',
+              fontWeight: '300',
+              color: 'white',
+              letterSpacing: '-0.02em'
             }}>
-              Ingresa tus credenciales para continuar
+              Iniciar Sesión
             </p>
           </div>
 
           {/* Formulario */}
-          <form onSubmit={handleLogin} style={{ marginBottom: '28px' }}>
-            <div style={{ marginBottom: '16px' }}>
-              <Input
-                label="Usuario"
-                type="text"
-                placeholder="Ingresa tu usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                icon={<FiUser size={18} />}
-                required
-                autoFocus
-              />
+          <form onSubmit={handleLogin}>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '11px',
+                fontWeight: '500',
+                color: 'rgba(255, 255, 255, 0.5)',
+                marginBottom: '8px',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase'
+              }}>
+                Usuario
+              </label>
+              <div style={{ position: 'relative' }}>
+                <FiUser
+                  size={18}
+                  style={{
+                    position: 'absolute',
+                    left: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#3b82f6',
+                    pointerEvents: 'none',
+                    zIndex: 1
+                  }}
+                />
+                <input
+                  type="text"
+                  placeholder="Ingresa tu usuario"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  autoFocus
+                  style={{
+                    width: '100%',
+                    padding: '14px 14px 14px 42px',
+                    background: '#2a2a2a',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    color: 'white',
+                    fontSize: '14px',
+                    transition: 'border-color 0.3s ease'
+                  }}
+                />
+              </div>
             </div>
 
-            <div style={{ marginBottom: '24px' }}>
-              <Input
-                label="Contraseña"
-                type="password"
-                placeholder="Ingresa tu contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                icon={<FiLock size={18} />}
-                required
-              />
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '11px',
+                fontWeight: '500',
+                color: 'rgba(255, 255, 255, 0.5)',
+                marginBottom: '8px',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase'
+              }}>
+                Contraseña
+              </label>
+              <div style={{ position: 'relative' }}>
+                <FiLock
+                  size={18}
+                  style={{
+                    position: 'absolute',
+                    left: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#3b82f6',
+                    pointerEvents: 'none',
+                    zIndex: 1
+                  }}
+                />
+                <input
+                  type="password"
+                  placeholder="Ingresa tu contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '14px 14px 14px 42px',
+                    background: '#2a2a2a',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    color: 'white',
+                    fontSize: '14px',
+                    transition: 'border-color 0.3s ease'
+                  }}
+                />
+              </div>
             </div>
 
-            <Button
+            <button
               type="submit"
-              size="lg"
-              isLoading={isLoading}
+              disabled={isLoading}
               style={{
                 width: '100%',
-                height: '48px',
-                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                padding: '14px',
+                background: '#3b82f6',
                 border: 'none',
-                boxShadow: '0 4px 14px rgba(59, 130, 246, 0.4)',
+                borderRadius: '2px',
                 color: 'white',
-                fontWeight: '600',
-                fontSize: '15px',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                fontSize: '13px',
+                fontWeight: '500',
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                letterSpacing: '0.02em',
+                transition: 'all 0.3s ease',
+                opacity: isLoading ? 0.7 : 1
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 8px 20px rgba(59, 130, 246, 0.5)';
+                if (!isLoading) {
+                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.8)';
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 14px rgba(59, 130, 246, 0.4)';
+                e.currentTarget.style.background = '#3b82f6';
               }}
             >
-              Iniciar Sesión
-            </Button>
+              {isLoading ? 'Ingresando...' : 'Iniciar Sesión'}
+            </button>
           </form>
 
-          {/* Divider */}
-          <div style={{
-            position: 'relative',
-            marginBottom: '24px'
-          }}>
-            <div style={{
-              borderTop: '1px solid #e2e8f0'
-            }} />
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              background: 'white',
-              padding: '0 12px',
-              fontSize: '11px',
-              color: '#94a3b8',
-              fontWeight: '600',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}>
-              Credenciales de prueba
-            </div>
-          </div>
-
-          {/* Credenciales */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px'
-          }}>
-            <button
-              type="button"
-              onClick={() => {
-                setUsername('admin');
-                setPassword('admin123');
-              }}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '14px 16px',
-                background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-                border: '1px solid #e2e8f0',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#cbd5e1';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{
-                  width: '32px',
-                  height: '32px',
-                  background: 'linear-gradient(135deg, #dbeafe, #bfdbfe)',
-                  borderRadius: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <FiUser size={16} color="#3b82f6" />
-                </div>
-                <div style={{ textAlign: 'left' }}>
-                  <div style={{
-                    fontSize: '13px',
-                    fontWeight: '600',
-                    color: '#1e293b',
-                    marginBottom: '2px'
-                  }}>
-                    Administrador
-                  </div>
-                  <div style={{
-                    fontSize: '11px',
-                    color: '#64748b',
-                    fontFamily: 'monospace'
-                  }}>
-                    admin / admin123
-                  </div>
-                </div>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setUsername('cajero');
-                setPassword('cajero123');
-              }}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '14px 16px',
-                background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-                border: '1px solid #e2e8f0',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#cbd5e1';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{
-                  width: '32px',
-                  height: '32px',
-                  background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)',
-                  borderRadius: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <FiUser size={16} color="#10b981" />
-                </div>
-                <div style={{ textAlign: 'left' }}>
-                  <div style={{
-                    fontSize: '13px',
-                    fontWeight: '600',
-                    color: '#1e293b',
-                    marginBottom: '2px'
-                  }}>
-                    Cajero
-                  </div>
-                  <div style={{
-                    fontSize: '11px',
-                    color: '#64748b',
-                    fontFamily: 'monospace'
-                  }}>
-                    cajero / cajero123
-                  </div>
-                </div>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
-            </button>
-          </div>
         </div>
 
         {/* Footer */}
         <div style={{
           textAlign: 'center',
-          marginTop: '24px',
-          paddingBottom: '20px'
+          marginTop: '24px'
         }}>
           <p style={{
-            color: 'rgba(255, 255, 255, 0.5)',
-            fontSize: '13px',
-            fontWeight: '500'
+            color: 'rgba(255, 255, 255, 0.3)',
+            fontSize: '12px',
+            fontWeight: '400',
+            letterSpacing: '0.02em'
           }}>
             Desarrollado por{' '}
             <span style={{
-              color: 'rgba(255, 255, 255, 0.9)',
-              fontWeight: '700'
+              color: 'rgba(255, 255, 255, 0.6)',
+              fontWeight: '500'
             }}>
               Syllet
             </span>
