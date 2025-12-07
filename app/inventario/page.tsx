@@ -7,6 +7,7 @@ import { StockAdjustment } from '../components/inventory/StockAdjustment';
 import { KardexView } from '../components/inventory/KardexView';
 import { useProductStore } from '../stores/productStore';
 import { useAuthStore } from '../stores/authStore';
+import { useThemeStore } from '../stores/themeStore';
 import { Product, MovementType } from '../types';
 import toast from 'react-hot-toast';
 import {
@@ -40,6 +41,7 @@ const categories: { value: string; label: string }[] = [
 export default function InventarioPage() {
   const { user } = useAuthStore();
   const { products, addProduct, updateProduct, deleteProduct, updateStock, getMovementsByProduct, getStockAlerts } = useProductStore();
+  const { colors } = useThemeStore();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -137,14 +139,14 @@ export default function InventarioPage() {
 
   return (
     <MainLayout>
-      <div style={{ padding: '20px', background: '#030712', minHeight: '100vh' }}>
+      <div style={{ padding: '20px', background: colors.bgPrimary, minHeight: '100vh' }}>
         {/* Header */}
         <div style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
             <h1 style={{
               fontSize: '14px',
               fontWeight: '500',
-              color: 'rgba(255, 255, 255, 0.6)',
+              color: colors.textSecondary,
               marginBottom: '12px',
               letterSpacing: '0.15em',
               textTransform: 'uppercase'
@@ -152,14 +154,14 @@ export default function InventarioPage() {
               Inventario
             </h1>
             <p style={{
-              color: 'rgba(255, 255, 255, 0.4)',
+              color: colors.textMuted,
               fontSize: '14px',
               fontWeight: '300',
               letterSpacing: '0.02em'
             }}>
               {filteredProducts.length} productos
               {stockAlerts.length > 0 && (
-                <span style={{ color: 'rgba(239, 68, 68, 0.9)', marginLeft: '8px' }}>
+                <span style={{ color: colors.error, marginLeft: '8px' }}>
                   ({stockAlerts.length} con stock bajo)
                 </span>
               )}
@@ -175,8 +177,8 @@ export default function InventarioPage() {
               alignItems: 'center',
               gap: '8px',
               padding: '12px 20px',
-              background: '#3b82f6',
-              border: '1px solid rgba(59, 130, 246, 0.5)',
+              background: colors.accent,
+              border: `1px solid ${colors.borderHover}`,
               borderRadius: '2px',
               color: 'white',
               fontSize: '12px',
@@ -194,8 +196,8 @@ export default function InventarioPage() {
 
         {/* Filters */}
         <div style={{
-          background: '#1d1d1d',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          background: colors.bgSecondary,
+          border: `1px solid ${colors.borderColor}`,
           borderRadius: '2px',
           padding: '20px',
           marginBottom: '24px'
@@ -208,7 +210,7 @@ export default function InventarioPage() {
                 left: '14px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                color: 'rgba(255, 255, 255, 0.4)',
+                color: colors.textMuted,
                 fontSize: '16px'
               }} />
               <input
@@ -219,10 +221,10 @@ export default function InventarioPage() {
                 style={{
                   width: '100%',
                   padding: '12px 14px 12px 42px',
-                  background: '#2a2a2a',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: colors.bgTertiary,
+                  border: `1px solid ${colors.borderColor}`,
                   borderRadius: '2px',
-                  color: 'white',
+                  color: colors.textPrimary,
                   fontSize: '13px',
                   fontWeight: '300',
                   outline: 'none',
@@ -237,10 +239,10 @@ export default function InventarioPage() {
               onChange={(e) => setCategoryFilter(e.target.value)}
               style={{
                 padding: '12px 14px',
-                background: '#2a2a2a',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: colors.bgTertiary,
+                border: `1px solid ${colors.borderColor}`,
                 borderRadius: '2px',
-                color: 'white',
+                color: colors.textPrimary,
                 fontSize: '13px',
                 fontWeight: '300',
                 outline: 'none',
@@ -249,7 +251,7 @@ export default function InventarioPage() {
               }}
             >
               {categories.map((cat) => (
-                <option key={cat.value} value={cat.value} style={{ background: '#2a2a2a' }}>
+                <option key={cat.value} value={cat.value} style={{ background: colors.bgTertiary }}>
                   {cat.label}
                 </option>
               ))}
@@ -263,11 +265,11 @@ export default function InventarioPage() {
                 alignItems: 'center',
                 gap: '8px',
                 padding: '12px 16px',
-                background: showLowStock ? 'rgba(239, 68, 68, 0.1)' : '#2a2a2a',
+                background: showLowStock ? colors.errorBg : colors.bgTertiary,
                 border: '1px solid',
-                borderColor: showLowStock ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.1)',
+                borderColor: showLowStock ? colors.errorBorder : colors.borderColor,
                 borderRadius: '2px',
-                color: showLowStock ? 'rgba(239, 68, 68, 0.9)' : 'rgba(255, 255, 255, 0.6)',
+                color: showLowStock ? colors.error : colors.textSecondary,
                 fontSize: '12px',
                 cursor: 'pointer',
                 letterSpacing: '0.02em',
@@ -284,11 +286,11 @@ export default function InventarioPage() {
                 onClick={() => setViewMode('table')}
                 style={{
                   padding: '10px',
-                  background: viewMode === 'table' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                  background: viewMode === 'table' ? colors.accentBg : 'transparent',
                   border: '1px solid',
-                  borderColor: viewMode === 'table' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(255, 255, 255, 0.1)',
+                  borderColor: viewMode === 'table' ? colors.borderHover : colors.borderColor,
                   borderRadius: '2px',
-                  color: viewMode === 'table' ? '#3b82f6' : 'rgba(255, 255, 255, 0.4)',
+                  color: viewMode === 'table' ? colors.accent : colors.textMuted,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -301,11 +303,11 @@ export default function InventarioPage() {
                 onClick={() => setViewMode('grid')}
                 style={{
                   padding: '10px',
-                  background: viewMode === 'grid' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                  background: viewMode === 'grid' ? colors.accentBg : 'transparent',
                   border: '1px solid',
-                  borderColor: viewMode === 'grid' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(255, 255, 255, 0.1)',
+                  borderColor: viewMode === 'grid' ? colors.borderHover : colors.borderColor,
                   borderRadius: '2px',
-                  color: viewMode === 'grid' ? '#3b82f6' : 'rgba(255, 255, 255, 0.4)',
+                  color: viewMode === 'grid' ? colors.accent : colors.textMuted,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -322,15 +324,15 @@ export default function InventarioPage() {
         {viewMode === 'table' ? (
           /* Table View */
           <div style={{
-            background: '#1d1d1d',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.borderColor}`,
             borderRadius: '2px',
             overflow: 'hidden'
           }}>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                  <tr style={{ borderBottom: `1px solid ${colors.borderColor}` }}>
                     {['Producto', 'Código', 'Categoría', 'P. Compra', 'P. Venta', 'Stock', 'Acciones'].map((header, i) => (
                       <th
                         key={header}
@@ -339,10 +341,10 @@ export default function InventarioPage() {
                           textAlign: i >= 3 ? 'right' : 'left',
                           fontSize: '11px',
                           fontWeight: '500',
-                          color: 'rgba(255, 255, 255, 0.5)',
+                          color: colors.textMuted,
                           letterSpacing: '0.1em',
                           textTransform: 'uppercase',
-                          background: '#2a2a2a'
+                          background: colors.bgTertiary
                         }}
                       >
                         {header}
@@ -356,7 +358,7 @@ export default function InventarioPage() {
                       <td colSpan={7} style={{
                         padding: '60px 20px',
                         textAlign: 'center',
-                        color: 'rgba(255, 255, 255, 0.3)'
+                        color: colors.textMuted
                       }}>
                         <FiPackage size={40} style={{ marginBottom: '16px', opacity: 0.5 }} />
                         <p style={{ fontSize: '13px', fontWeight: '300' }}>No se encontraron productos</p>
@@ -367,10 +369,10 @@ export default function InventarioPage() {
                       <tr
                         key={product.id}
                         style={{
-                          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                          borderBottom: `1px solid ${colors.borderColor}`,
                           transition: 'background 0.2s ease'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = colors.bgTertiary}
                         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                       >
                         <td style={{ padding: '14px 16px' }}>
@@ -378,7 +380,7 @@ export default function InventarioPage() {
                             <div style={{
                               width: '40px',
                               height: '40px',
-                              background: '#2a2a2a',
+                              background: colors.bgTertiary,
                               borderRadius: '2px',
                               display: 'flex',
                               alignItems: 'center',
@@ -391,14 +393,14 @@ export default function InventarioPage() {
                                   style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '2px' }}
                                 />
                               ) : (
-                                <FiPackage style={{ color: 'rgba(255, 255, 255, 0.3)' }} />
+                                <FiPackage style={{ color: colors.textMuted }} />
                               )}
                             </div>
                             <div>
-                              <p style={{ fontWeight: '400', color: 'white', fontSize: '13px', marginBottom: '2px' }}>
+                              <p style={{ fontWeight: '400', color: colors.textPrimary, fontSize: '13px', marginBottom: '2px' }}>
                                 {product.name}
                               </p>
-                              <p style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)' }}>
+                              <p style={{ fontSize: '11px', color: colors.textMuted }}>
                                 {getUnitLabel(product.unit)}
                               </p>
                             </div>
@@ -407,10 +409,10 @@ export default function InventarioPage() {
                         <td style={{ padding: '14px 16px' }}>
                           <span style={{
                             fontSize: '12px',
-                            background: '#2a2a2a',
+                            background: colors.bgTertiary,
                             padding: '4px 8px',
                             borderRadius: '2px',
-                            color: 'rgba(255, 255, 255, 0.6)',
+                            color: colors.textSecondary,
                             fontFamily: 'monospace'
                           }}>
                             {product.barcode}
@@ -420,31 +422,31 @@ export default function InventarioPage() {
                           <span style={{
                             fontSize: '10px',
                             padding: '4px 10px',
-                            background: 'rgba(59, 130, 246, 0.1)',
-                            border: '1px solid rgba(59, 130, 246, 0.3)',
+                            background: colors.accentBg,
+                            border: `1px solid ${colors.accentBorder}`,
                             borderRadius: '2px',
-                            color: '#3b82f6',
+                            color: colors.accent,
                             textTransform: 'uppercase',
                             letterSpacing: '0.05em'
                           }}>
                             {getCategoryLabel(product.category)}
                           </span>
                         </td>
-                        <td style={{ padding: '14px 16px', textAlign: 'right', color: 'rgba(255, 255, 255, 0.5)', fontSize: '13px' }}>
+                        <td style={{ padding: '14px 16px', textAlign: 'right', color: colors.textMuted, fontSize: '13px' }}>
                           ${product.purchasePrice.toFixed(2)}
                         </td>
-                        <td style={{ padding: '14px 16px', textAlign: 'right', color: 'white', fontSize: '13px', fontWeight: '400' }}>
+                        <td style={{ padding: '14px 16px', textAlign: 'right', color: colors.textPrimary, fontSize: '13px', fontWeight: '400' }}>
                           ${product.salePrice.toFixed(2)}
                         </td>
                         <td style={{ padding: '14px 16px', textAlign: 'right' }}>
                           <span style={{
                             fontWeight: '400',
-                            color: product.stock <= product.minStock ? 'rgba(239, 68, 68, 0.9)' : 'rgba(16, 185, 129, 0.9)'
+                            color: product.stock <= product.minStock ? colors.error : colors.success
                           }}>
                             {product.stock}
                           </span>
                           {product.stock <= product.minStock && (
-                            <FiAlertTriangle style={{ marginLeft: '6px', color: 'rgba(239, 68, 68, 0.8)' }} size={12} />
+                            <FiAlertTriangle style={{ marginLeft: '6px', color: colors.error }} size={12} />
                           )}
                         </td>
                         <td style={{ padding: '14px 16px' }}>
@@ -457,17 +459,17 @@ export default function InventarioPage() {
                                 background: 'transparent',
                                 border: 'none',
                                 borderRadius: '2px',
-                                color: 'rgba(255, 255, 255, 0.4)',
+                                color: colors.textMuted,
                                 cursor: 'pointer',
                                 transition: 'all 0.2s ease'
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
-                                e.currentTarget.style.color = '#3b82f6';
+                                e.currentTarget.style.background = colors.accentBg;
+                                e.currentTarget.style.color = colors.accent;
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.background = 'transparent';
-                                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
+                                e.currentTarget.style.color = colors.textMuted;
                               }}
                             >
                               <FiList size={16} />
@@ -480,17 +482,17 @@ export default function InventarioPage() {
                                 background: 'transparent',
                                 border: 'none',
                                 borderRadius: '2px',
-                                color: 'rgba(255, 255, 255, 0.4)',
+                                color: colors.textMuted,
                                 cursor: 'pointer',
                                 transition: 'all 0.2s ease'
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)';
-                                e.currentTarget.style.color = '#10b981';
+                                e.currentTarget.style.background = colors.successBg;
+                                e.currentTarget.style.color = colors.success;
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.background = 'transparent';
-                                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
+                                e.currentTarget.style.color = colors.textMuted;
                               }}
                             >
                               <FiRefreshCw size={16} />
@@ -503,17 +505,17 @@ export default function InventarioPage() {
                                 background: 'transparent',
                                 border: 'none',
                                 borderRadius: '2px',
-                                color: 'rgba(255, 255, 255, 0.4)',
+                                color: colors.textMuted,
                                 cursor: 'pointer',
                                 transition: 'all 0.2s ease'
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
-                                e.currentTarget.style.color = '#3b82f6';
+                                e.currentTarget.style.background = colors.accentBg;
+                                e.currentTarget.style.color = colors.accent;
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.background = 'transparent';
-                                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
+                                e.currentTarget.style.color = colors.textMuted;
                               }}
                             >
                               <FiEdit2 size={16} />
@@ -526,17 +528,17 @@ export default function InventarioPage() {
                                 background: 'transparent',
                                 border: 'none',
                                 borderRadius: '2px',
-                                color: 'rgba(255, 255, 255, 0.4)',
+                                color: colors.textMuted,
                                 cursor: 'pointer',
                                 transition: 'all 0.2s ease'
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
-                                e.currentTarget.style.color = '#ef4444';
+                                e.currentTarget.style.background = colors.errorBg;
+                                e.currentTarget.style.color = colors.error;
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.background = 'transparent';
-                                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
+                                e.currentTarget.style.color = colors.textMuted;
                               }}
                             >
                               <FiTrash2 size={16} />
@@ -562,9 +564,9 @@ export default function InventarioPage() {
                 gridColumn: '1 / -1',
                 textAlign: 'center',
                 padding: '60px 20px',
-                color: 'rgba(255, 255, 255, 0.3)',
-                background: '#1d1d1d',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: colors.textMuted,
+                background: colors.bgSecondary,
+                border: `1px solid ${colors.borderColor}`,
                 borderRadius: '2px'
               }}>
                 <FiPackage size={40} style={{ marginBottom: '16px', opacity: 0.5 }} />
@@ -575,21 +577,21 @@ export default function InventarioPage() {
                 <div
                   key={product.id}
                   style={{
-                    background: '#1d1d1d',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: colors.bgSecondary,
+                    border: `1px solid ${colors.borderColor}`,
                     borderRadius: '2px',
                     padding: '20px',
                     transition: 'border-color 0.3s ease'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.5)'}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = colors.borderHover}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = colors.borderColor}
                 >
                   {/* Product Header */}
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', marginBottom: '16px' }}>
                     <div style={{
                       width: '50px',
                       height: '50px',
-                      background: '#2a2a2a',
+                      background: colors.bgTertiary,
                       borderRadius: '2px',
                       display: 'flex',
                       alignItems: 'center',
@@ -603,13 +605,13 @@ export default function InventarioPage() {
                           style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '2px' }}
                         />
                       ) : (
-                        <FiPackage style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: '20px' }} />
+                        <FiPackage style={{ color: colors.textMuted, fontSize: '20px' }} />
                       )}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{
                         fontWeight: '400',
-                        color: 'white',
+                        color: colors.textPrimary,
                         fontSize: '14px',
                         marginBottom: '4px',
                         whiteSpace: 'nowrap',
@@ -618,16 +620,16 @@ export default function InventarioPage() {
                       }}>
                         {product.name}
                       </p>
-                      <p style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)', marginBottom: '6px' }}>
+                      <p style={{ fontSize: '11px', color: colors.textMuted, marginBottom: '6px' }}>
                         {getUnitLabel(product.unit)}
                       </p>
                       <span style={{
                         fontSize: '9px',
                         padding: '3px 8px',
-                        background: 'rgba(59, 130, 246, 0.1)',
-                        border: '1px solid rgba(59, 130, 246, 0.3)',
+                        background: colors.accentBg,
+                        border: `1px solid ${colors.accentBorder}`,
                         borderRadius: '2px',
-                        color: '#3b82f6',
+                        color: colors.accent,
                         textTransform: 'uppercase',
                         letterSpacing: '0.05em'
                       }}>
@@ -640,7 +642,7 @@ export default function InventarioPage() {
                   <div style={{ marginBottom: '16px' }}>
                     <span style={{
                       fontSize: '10px',
-                      color: 'rgba(255, 255, 255, 0.4)',
+                      color: colors.textMuted,
                       textTransform: 'uppercase',
                       letterSpacing: '0.1em'
                     }}>
@@ -648,10 +650,10 @@ export default function InventarioPage() {
                     </span>
                     <p style={{
                       fontSize: '12px',
-                      background: '#2a2a2a',
+                      background: colors.bgTertiary,
                       padding: '6px 10px',
                       borderRadius: '2px',
-                      color: 'rgba(255, 255, 255, 0.6)',
+                      color: colors.textSecondary,
                       fontFamily: 'monospace',
                       marginTop: '4px'
                     }}>
@@ -662,28 +664,28 @@ export default function InventarioPage() {
                   {/* Prices */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                     <div>
-                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      <span style={{ fontSize: '10px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                         Compra
                       </span>
-                      <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.6)', fontWeight: '300', marginTop: '4px' }}>
+                      <p style={{ fontSize: '14px', color: colors.textSecondary, fontWeight: '300', marginTop: '4px' }}>
                         ${product.purchasePrice.toFixed(2)}
                       </p>
                     </div>
                     <div>
-                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      <span style={{ fontSize: '10px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                         Venta
                       </span>
-                      <p style={{ fontSize: '14px', color: '#3b82f6', fontWeight: '300', marginTop: '4px' }}>
+                      <p style={{ fontSize: '14px', color: colors.accent, fontWeight: '300', marginTop: '4px' }}>
                         ${product.salePrice.toFixed(2)}
                       </p>
                     </div>
                     <div>
-                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      <span style={{ fontSize: '10px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                         Stock
                       </span>
                       <p style={{
                         fontSize: '14px',
-                        color: product.stock <= product.minStock ? 'rgba(239, 68, 68, 0.9)' : 'rgba(16, 185, 129, 0.9)',
+                        color: product.stock <= product.minStock ? colors.error : colors.success,
                         fontWeight: '400',
                         marginTop: '4px',
                         display: 'flex',
@@ -697,16 +699,16 @@ export default function InventarioPage() {
                   </div>
 
                   {/* Actions */}
-                  <div style={{ display: 'flex', gap: '8px', paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                  <div style={{ display: 'flex', gap: '8px', paddingTop: '16px', borderTop: `1px solid ${colors.borderColor}` }}>
                     <button
                       onClick={() => openKardex(product)}
                       style={{
                         flex: 1,
                         padding: '10px',
-                        background: '#2a2a2a',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        background: colors.bgTertiary,
+                        border: `1px solid ${colors.borderColor}`,
                         borderRadius: '2px',
-                        color: 'rgba(255, 255, 255, 0.6)',
+                        color: colors.textSecondary,
                         fontSize: '11px',
                         cursor: 'pointer',
                         display: 'flex',
@@ -723,10 +725,10 @@ export default function InventarioPage() {
                       style={{
                         flex: 1,
                         padding: '10px',
-                        background: 'rgba(16, 185, 129, 0.1)',
-                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        background: colors.successBg,
+                        border: `1px solid ${colors.successBorder}`,
                         borderRadius: '2px',
-                        color: '#10b981',
+                        color: colors.success,
                         fontSize: '11px',
                         cursor: 'pointer',
                         display: 'flex',
@@ -742,10 +744,10 @@ export default function InventarioPage() {
                       style={{
                         flex: 1,
                         padding: '10px',
-                        background: 'rgba(59, 130, 246, 0.1)',
-                        border: '1px solid rgba(59, 130, 246, 0.3)',
+                        background: colors.accentBg,
+                        border: `1px solid ${colors.accentBorder}`,
                         borderRadius: '2px',
-                        color: '#3b82f6',
+                        color: colors.accent,
                         fontSize: '11px',
                         cursor: 'pointer',
                         display: 'flex',
@@ -761,10 +763,10 @@ export default function InventarioPage() {
                       style={{
                         flex: 1,
                         padding: '10px',
-                        background: 'rgba(239, 68, 68, 0.1)',
-                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        background: colors.errorBg,
+                        border: `1px solid ${colors.errorBorder}`,
                         borderRadius: '2px',
-                        color: '#ef4444',
+                        color: colors.error,
                         fontSize: '11px',
                         cursor: 'pointer',
                         display: 'flex',

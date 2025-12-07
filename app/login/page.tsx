@@ -2,13 +2,15 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FiUser, FiLock, FiShoppingCart } from 'react-icons/fi';
+import { FiUser, FiLock, FiShoppingCart, FiSun, FiMoon } from 'react-icons/fi';
 import { useAuthStore } from '../stores/authStore';
+import { useThemeStore } from '../stores/themeStore';
 import toast, { Toaster } from 'react-hot-toast';
 
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuthStore();
+  const { mode, colors, toggleTheme } = useThemeStore();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -38,11 +40,52 @@ export default function LoginPage() {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '20px',
-      background: '#030712',
+      background: colors.bgPrimary,
       position: 'relative',
       overflow: 'hidden'
     }}>
-      <Toaster position="top-center" />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: colors.bgSecondary,
+            color: colors.textPrimary,
+            border: `1px solid ${colors.borderColor}`,
+          },
+        }}
+      />
+
+      {/* Theme Toggle Button */}
+      <button
+        onClick={toggleTheme}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          width: '44px',
+          height: '44px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: colors.bgSecondary,
+          border: `1px solid ${colors.borderColor}`,
+          borderRadius: '2px',
+          color: colors.textSecondary,
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          zIndex: 20
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = colors.borderHover;
+          e.currentTarget.style.color = colors.accent;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = colors.borderColor;
+          e.currentTarget.style.color = colors.textSecondary;
+        }}
+      >
+        {mode === 'dark' ? <FiSun size={20} /> : <FiMoon size={20} />}
+      </button>
 
       {/* Fondo con efecto de luz sutil */}
       <div style={{
@@ -52,7 +95,7 @@ export default function LoginPage() {
         transform: 'translateX(-50%)',
         width: '600px',
         height: '600px',
-        background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)',
+        background: `radial-gradient(circle, ${colors.accentBg} 0%, transparent 70%)`,
         pointerEvents: 'none'
       }} />
 
@@ -64,10 +107,10 @@ export default function LoginPage() {
       }}>
         {/* Card principal */}
         <div style={{
-          background: '#1d1d1d',
+          background: colors.bgSecondary,
           borderRadius: '2px',
           padding: '40px 32px',
-          border: '1px solid rgba(255, 255, 255, 0.1)'
+          border: `1px solid ${colors.borderColor}`
         }}>
 
           {/* Header */}
@@ -76,21 +119,21 @@ export default function LoginPage() {
             <div style={{
               width: '48px',
               height: '48px',
-              background: 'rgba(59, 130, 246, 0.1)',
-              border: '1px solid rgba(59, 130, 246, 0.3)',
+              background: colors.accentBg,
+              border: `1px solid ${colors.accentBorder}`,
               borderRadius: '2px',
               marginBottom: '24px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <FiShoppingCart size={24} style={{ color: '#3b82f6' }} />
+              <FiShoppingCart size={24} style={{ color: colors.accent }} />
             </div>
 
             <h1 style={{
               fontSize: '11px',
               fontWeight: '500',
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: colors.textMuted,
               marginBottom: '8px',
               letterSpacing: '0.15em',
               textTransform: 'uppercase'
@@ -100,7 +143,7 @@ export default function LoginPage() {
             <p style={{
               fontSize: '24px',
               fontWeight: '300',
-              color: 'white',
+              color: colors.textPrimary,
               letterSpacing: '-0.02em'
             }}>
               Iniciar Sesión
@@ -114,7 +157,7 @@ export default function LoginPage() {
                 display: 'block',
                 fontSize: '11px',
                 fontWeight: '500',
-                color: 'rgba(255, 255, 255, 0.5)',
+                color: colors.textMuted,
                 marginBottom: '8px',
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase'
@@ -129,7 +172,7 @@ export default function LoginPage() {
                     left: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    color: '#3b82f6',
+                    color: colors.accent,
                     pointerEvents: 'none',
                     zIndex: 1
                   }}
@@ -144,10 +187,10 @@ export default function LoginPage() {
                   style={{
                     width: '100%',
                     padding: '14px 14px 14px 42px',
-                    background: '#2a2a2a',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: colors.bgTertiary,
+                    border: `1px solid ${colors.borderColor}`,
                     borderRadius: '2px',
-                    color: 'white',
+                    color: colors.textPrimary,
                     fontSize: '14px',
                     transition: 'border-color 0.3s ease'
                   }}
@@ -160,7 +203,7 @@ export default function LoginPage() {
                 display: 'block',
                 fontSize: '11px',
                 fontWeight: '500',
-                color: 'rgba(255, 255, 255, 0.5)',
+                color: colors.textMuted,
                 marginBottom: '8px',
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase'
@@ -175,7 +218,7 @@ export default function LoginPage() {
                     left: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    color: '#3b82f6',
+                    color: colors.accent,
                     pointerEvents: 'none',
                     zIndex: 1
                   }}
@@ -189,10 +232,10 @@ export default function LoginPage() {
                   style={{
                     width: '100%',
                     padding: '14px 14px 14px 42px',
-                    background: '#2a2a2a',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: colors.bgTertiary,
+                    border: `1px solid ${colors.borderColor}`,
                     borderRadius: '2px',
-                    color: 'white',
+                    color: colors.textPrimary,
                     fontSize: '14px',
                     transition: 'border-color 0.3s ease'
                   }}
@@ -206,7 +249,7 @@ export default function LoginPage() {
               style={{
                 width: '100%',
                 padding: '14px',
-                background: '#3b82f6',
+                background: colors.accent,
                 border: 'none',
                 borderRadius: '2px',
                 color: 'white',
@@ -219,11 +262,11 @@ export default function LoginPage() {
               }}
               onMouseEnter={(e) => {
                 if (!isLoading) {
-                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.8)';
+                  e.currentTarget.style.background = colors.accentHover;
                 }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#3b82f6';
+                e.currentTarget.style.background = colors.accent;
               }}
             >
               {isLoading ? 'Ingresando...' : 'Iniciar Sesión'}
@@ -238,14 +281,14 @@ export default function LoginPage() {
           marginTop: '24px'
         }}>
           <p style={{
-            color: 'rgba(255, 255, 255, 0.3)',
+            color: colors.textMuted,
             fontSize: '12px',
             fontWeight: '400',
             letterSpacing: '0.02em'
           }}>
             Desarrollado por{' '}
             <span style={{
-              color: 'rgba(255, 255, 255, 0.6)',
+              color: colors.textSecondary,
               fontWeight: '500'
             }}>
               Syllet

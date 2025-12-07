@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 import { useAuthStore } from '../../stores/authStore';
 import { useProductStore } from '../../stores/productStore';
+import { useThemeStore } from '../../stores/themeStore';
 import { Toaster } from 'react-hot-toast';
 
 interface MainLayoutProps {
@@ -15,6 +16,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
   const { initializeSampleData } = useProductStore();
+  const { colors } = useThemeStore();
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Esperar a que Zustand se hidrate desde localStorage
@@ -43,13 +45,13 @@ export function MainLayout({ children }: MainLayoutProps) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#030712'
+        background: colors.bgPrimary
       }}>
         <div style={{
           width: '48px',
           height: '48px',
-          border: '2px solid rgba(59, 130, 246, 0.2)',
-          borderTopColor: '#3b82f6',
+          border: `2px solid ${colors.accentBorder}`,
+          borderTopColor: colors.accent,
           borderRadius: '50%',
           animation: 'spin 1s linear infinite'
         }} />
@@ -63,26 +65,26 @@ export function MainLayout({ children }: MainLayoutProps) {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#030712' }}>
+    <div style={{ minHeight: '100vh', background: colors.bgPrimary }}>
       <Toaster
         position="top-right"
         toastOptions={{
           style: {
-            background: '#1d1d1d',
-            color: '#ffffff',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: colors.bgSecondary,
+            color: colors.textPrimary,
+            border: `1px solid ${colors.borderColor}`,
             backdropFilter: 'blur(12px)',
           },
           success: {
             iconTheme: {
-              primary: '#3b82f6',
-              secondary: '#ffffff',
+              primary: colors.accent,
+              secondary: colors.textPrimary,
             },
           },
           error: {
             iconTheme: {
-              primary: '#ef4444',
-              secondary: '#ffffff',
+              primary: colors.error,
+              secondary: colors.textPrimary,
             },
           },
         }}

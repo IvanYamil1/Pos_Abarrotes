@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { MainLayout } from '../components/layout/MainLayout';
 import { useStoreConfigStore } from '../stores/storeConfig';
 import { useAuthStore } from '../stores/authStore';
+import { useThemeStore } from '../stores/themeStore';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { FiSave, FiShoppingBag, FiInfo, FiMapPin, FiPhone, FiFileText } from 'react-icons/fi';
@@ -12,6 +13,7 @@ export default function ConfiguracionPage() {
   const router = useRouter();
   const { user } = useAuthStore();
   const { config, updateConfig } = useStoreConfigStore();
+  const { colors } = useThemeStore();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -49,13 +51,13 @@ export default function ConfiguracionPage() {
 
   return (
     <MainLayout>
-      <div style={{ padding: '20px', background: '#030712', minHeight: '100vh' }}>
+      <div style={{ padding: '20px', background: colors.bgPrimary, minHeight: '100vh' }}>
         {/* Header */}
         <div style={{ marginBottom: '48px' }}>
           <h1 style={{
             fontSize: '14px',
             fontWeight: '500',
-            color: 'rgba(255, 255, 255, 0.6)',
+            color: colors.textSecondary,
             marginBottom: '12px',
             letterSpacing: '0.15em',
             textTransform: 'uppercase'
@@ -63,7 +65,7 @@ export default function ConfiguracionPage() {
             Configuración
           </h1>
           <p style={{
-            color: 'rgba(255, 255, 255, 0.4)',
+            color: colors.textMuted,
             fontSize: '14px',
             fontWeight: '300',
             letterSpacing: '0.02em'
@@ -75,23 +77,23 @@ export default function ConfiguracionPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
           {/* Store Info */}
           <div style={{
-            background: '#1d1d1d',
+            background: colors.bgSecondary,
             borderRadius: '2px',
             padding: '24px',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            border: `1px solid ${colors.borderColor}`
           }}>
-            <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: `1px solid ${colors.borderColor}` }}>
               <h2 style={{
                 fontSize: '11px',
                 fontWeight: '500',
-                color: 'rgba(255, 255, 255, 0.5)',
+                color: colors.textMuted,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
                 marginBottom: '4px'
               }}>
                 Información de la Tienda
               </h2>
-              <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.3)' }}>
+              <p style={{ fontSize: '12px', color: colors.textMuted }}>
                 Estos datos aparecerán en los tickets
               </p>
             </div>
@@ -103,7 +105,7 @@ export default function ConfiguracionPage() {
                   display: 'block',
                   fontSize: '11px',
                   fontWeight: '500',
-                  color: 'rgba(255, 255, 255, 0.5)',
+                  color: colors.textMuted,
                   marginBottom: '8px',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase'
@@ -116,7 +118,7 @@ export default function ConfiguracionPage() {
                     left: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    color: 'rgba(255, 255, 255, 0.3)',
+                    color: colors.textMuted,
                     fontSize: '16px'
                   }} />
                   <input
@@ -127,10 +129,10 @@ export default function ConfiguracionPage() {
                     style={{
                       width: '100%',
                       padding: '12px 14px 12px 42px',
-                      background: '#2a2a2a',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: colors.bgTertiary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
-                      color: 'white',
+                      color: colors.textPrimary,
                       fontSize: '14px',
                       transition: 'border-color 0.3s ease'
                     }}
@@ -144,7 +146,7 @@ export default function ConfiguracionPage() {
                   display: 'block',
                   fontSize: '11px',
                   fontWeight: '500',
-                  color: 'rgba(255, 255, 255, 0.5)',
+                  color: colors.textMuted,
                   marginBottom: '8px',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase'
@@ -157,7 +159,7 @@ export default function ConfiguracionPage() {
                     left: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    color: 'rgba(255, 255, 255, 0.3)',
+                    color: colors.textMuted,
                     fontSize: '16px'
                   }} />
                   <input
@@ -168,10 +170,10 @@ export default function ConfiguracionPage() {
                     style={{
                       width: '100%',
                       padding: '12px 14px 12px 42px',
-                      background: '#2a2a2a',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: colors.bgTertiary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
-                      color: 'white',
+                      color: colors.textPrimary,
                       fontSize: '14px',
                       transition: 'border-color 0.3s ease'
                     }}
@@ -185,7 +187,7 @@ export default function ConfiguracionPage() {
                   display: 'block',
                   fontSize: '11px',
                   fontWeight: '500',
-                  color: 'rgba(255, 255, 255, 0.5)',
+                  color: colors.textMuted,
                   marginBottom: '8px',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase'
@@ -198,7 +200,7 @@ export default function ConfiguracionPage() {
                     left: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    color: 'rgba(255, 255, 255, 0.3)',
+                    color: colors.textMuted,
                     fontSize: '16px'
                   }} />
                   <input
@@ -209,10 +211,10 @@ export default function ConfiguracionPage() {
                     style={{
                       width: '100%',
                       padding: '12px 14px 12px 42px',
-                      background: '#2a2a2a',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: colors.bgTertiary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
-                      color: 'white',
+                      color: colors.textPrimary,
                       fontSize: '14px',
                       transition: 'border-color 0.3s ease'
                     }}
@@ -226,7 +228,7 @@ export default function ConfiguracionPage() {
                   display: 'block',
                   fontSize: '11px',
                   fontWeight: '500',
-                  color: 'rgba(255, 255, 255, 0.5)',
+                  color: colors.textMuted,
                   marginBottom: '8px',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase'
@@ -239,7 +241,7 @@ export default function ConfiguracionPage() {
                     left: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    color: 'rgba(255, 255, 255, 0.3)',
+                    color: colors.textMuted,
                     fontSize: '16px'
                   }} />
                   <input
@@ -250,10 +252,10 @@ export default function ConfiguracionPage() {
                     style={{
                       width: '100%',
                       padding: '12px 14px 12px 42px',
-                      background: '#2a2a2a',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: colors.bgTertiary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
-                      color: 'white',
+                      color: colors.textPrimary,
                       fontSize: '14px',
                       transition: 'border-color 0.3s ease'
                     }}
@@ -265,23 +267,23 @@ export default function ConfiguracionPage() {
 
           {/* Ticket Settings */}
           <div style={{
-            background: '#1d1d1d',
+            background: colors.bgSecondary,
             borderRadius: '2px',
             padding: '24px',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            border: `1px solid ${colors.borderColor}`
           }}>
-            <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: `1px solid ${colors.borderColor}` }}>
               <h2 style={{
                 fontSize: '11px',
                 fontWeight: '500',
-                color: 'rgba(255, 255, 255, 0.5)',
+                color: colors.textMuted,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
                 marginBottom: '4px'
               }}>
                 Configuración de Tickets
               </h2>
-              <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.3)' }}>
+              <p style={{ fontSize: '12px', color: colors.textMuted }}>
                 Personaliza los tickets de venta
               </p>
             </div>
@@ -293,7 +295,7 @@ export default function ConfiguracionPage() {
                   display: 'block',
                   fontSize: '11px',
                   fontWeight: '500',
-                  color: 'rgba(255, 255, 255, 0.5)',
+                  color: colors.textMuted,
                   marginBottom: '8px',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase'
@@ -308,17 +310,17 @@ export default function ConfiguracionPage() {
                   style={{
                     width: '100%',
                     padding: '12px 14px',
-                    background: '#2a2a2a',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: colors.bgTertiary,
+                    border: `1px solid ${colors.borderColor}`,
                     borderRadius: '2px',
-                    color: 'white',
+                    color: colors.textPrimary,
                     fontSize: '14px',
                     resize: 'vertical',
                     minHeight: '100px',
                     transition: 'border-color 0.3s ease'
                   }}
                 />
-                <p style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.3)', marginTop: '8px' }}>
+                <p style={{ fontSize: '11px', color: colors.textMuted, marginTop: '8px' }}>
                   Este texto aparecerá al final de cada ticket
                 </p>
               </div>
@@ -326,14 +328,14 @@ export default function ConfiguracionPage() {
               {/* Preview */}
               <div style={{
                 padding: '16px',
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: colors.bgTertiary,
+                border: `1px solid ${colors.borderColor}`,
                 borderRadius: '2px'
               }}>
                 <p style={{
                   fontSize: '11px',
                   fontWeight: '500',
-                  color: 'rgba(255, 255, 255, 0.5)',
+                  color: colors.textMuted,
                   marginBottom: '12px',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase'
@@ -387,24 +389,24 @@ export default function ConfiguracionPage() {
 
         {/* System Info */}
         <div style={{
-          background: '#1d1d1d',
+          background: colors.bgSecondary,
           borderRadius: '2px',
           padding: '24px',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          border: `1px solid ${colors.borderColor}`,
           marginBottom: '24px'
         }}>
-          <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+          <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: `1px solid ${colors.borderColor}` }}>
             <h2 style={{
               fontSize: '11px',
               fontWeight: '500',
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: colors.textMuted,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
               marginBottom: '4px'
             }}>
               Información del Sistema
             </h2>
-            <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.3)' }}>
+            <p style={{ fontSize: '12px', color: colors.textMuted }}>
               Datos técnicos del sistema
             </p>
           </div>
@@ -412,28 +414,28 @@ export default function ConfiguracionPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
             <div style={{
               padding: '20px',
-              background: 'rgba(59, 130, 246, 0.1)',
-              border: '1px solid rgba(59, 130, 246, 0.2)',
+              background: colors.accentBg,
+              border: `1px solid ${colors.accentBorder}`,
               borderRadius: '2px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                <FiInfo style={{ color: '#3b82f6', fontSize: '16px' }} />
-                <span style={{ fontWeight: '500', color: 'rgba(255, 255, 255, 0.8)', fontSize: '13px' }}>Versión</span>
+                <FiInfo style={{ color: colors.accent, fontSize: '16px' }} />
+                <span style={{ fontWeight: '500', color: colors.textSecondary, fontSize: '13px' }}>Versión</span>
               </div>
-              <p style={{ fontSize: '28px', fontWeight: '300', color: '#3b82f6', letterSpacing: '-0.02em' }}>1.0.0</p>
+              <p style={{ fontSize: '28px', fontWeight: '300', color: colors.accent, letterSpacing: '-0.02em' }}>1.0.0</p>
             </div>
 
             <div style={{
               padding: '20px',
-              background: 'rgba(16, 185, 129, 0.1)',
-              border: '1px solid rgba(16, 185, 129, 0.2)',
+              background: colors.successBg,
+              border: `1px solid ${colors.successBorder}`,
               borderRadius: '2px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                <FiInfo style={{ color: '#10b981', fontSize: '16px' }} />
-                <span style={{ fontWeight: '500', color: 'rgba(255, 255, 255, 0.8)', fontSize: '13px' }}>Almacenamiento</span>
+                <FiInfo style={{ color: colors.success, fontSize: '16px' }} />
+                <span style={{ fontWeight: '500', color: colors.textSecondary, fontSize: '13px' }}>Almacenamiento</span>
               </div>
-              <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.6)' }}>LocalStorage (Navegador)</p>
+              <p style={{ fontSize: '14px', color: colors.textSecondary }}>LocalStorage (Navegador)</p>
             </div>
 
             <div style={{
@@ -444,9 +446,9 @@ export default function ConfiguracionPage() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                 <FiInfo style={{ color: '#8b5cf6', fontSize: '16px' }} />
-                <span style={{ fontWeight: '500', color: 'rgba(255, 255, 255, 0.8)', fontSize: '13px' }}>Usuario</span>
+                <span style={{ fontWeight: '500', color: colors.textSecondary, fontSize: '13px' }}>Usuario</span>
               </div>
-              <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.6)' }}>
+              <p style={{ fontSize: '14px', color: colors.textSecondary }}>
                 {user?.name} ({user?.role})
               </p>
             </div>

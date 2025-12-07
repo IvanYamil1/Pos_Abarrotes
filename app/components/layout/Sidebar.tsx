@@ -9,10 +9,12 @@ import {
   FiPackage,
   FiDollarSign,
   FiBarChart2,
-  FiSettings,
   FiLogOut,
+  FiSun,
+  FiMoon,
 } from 'react-icons/fi';
 import { useAuthStore } from '../../stores/authStore';
+import { useThemeStore } from '../../stores/themeStore';
 import { useRouter } from 'next/navigation';
 
 const menuItems = [
@@ -26,6 +28,7 @@ const menuItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
+  const { mode, colors, toggleTheme } = useThemeStore();
   const router = useRouter();
 
   const handleLogout = () => {
@@ -40,21 +43,21 @@ export function Sidebar() {
       top: 0,
       height: '100vh',
       width: '260px',
-      background: '#030712',
+      background: colors.bgPrimary,
       display: 'flex',
       flexDirection: 'column',
-      borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+      borderRight: `1px solid ${colors.borderColor}`,
       zIndex: 40
     }}>
       {/* Logo estilo Syllet */}
       <div style={{
         padding: '32px 24px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        borderBottom: `1px solid ${colors.borderColor}`
       }}>
         <h1 style={{
           fontWeight: '500',
           fontSize: '13px',
-          color: 'white',
+          color: colors.textPrimary,
           letterSpacing: '0.15em',
           textTransform: 'uppercase',
           marginBottom: '4px'
@@ -63,7 +66,7 @@ export function Sidebar() {
         </h1>
         <p style={{
           fontSize: '11px',
-          color: 'rgba(255, 255, 255, 0.4)',
+          color: colors.textMuted,
           fontWeight: '300',
           letterSpacing: '0.05em'
         }}>
@@ -85,21 +88,21 @@ export function Sidebar() {
                     padding: '12px 0',
                     textDecoration: 'none',
                     transition: 'all 0.3s ease',
-                    color: isActive ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                    color: isActive ? colors.textPrimary : colors.textMuted,
                     fontWeight: '400',
                     fontSize: '14px',
                     letterSpacing: '0.02em',
-                    borderBottom: isActive ? '1px solid rgba(59, 130, 246, 0.5)' : '1px solid transparent'
+                    borderBottom: isActive ? `1px solid ${colors.borderHover}` : '1px solid transparent'
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
-                      e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
-                      e.currentTarget.style.borderBottomColor = 'rgba(255, 255, 255, 0.2)';
+                      e.currentTarget.style.color = colors.textSecondary;
+                      e.currentTarget.style.borderBottomColor = colors.borderColor;
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive) {
-                      e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                      e.currentTarget.style.color = colors.textMuted;
                       e.currentTarget.style.borderBottomColor = 'transparent';
                     }
                   }}
@@ -116,7 +119,7 @@ export function Sidebar() {
           <div style={{
             marginTop: '24px',
             paddingTop: '24px',
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+            borderTop: `1px solid ${colors.borderColor}`
           }}>
             <Link
               href="/configuracion"
@@ -125,21 +128,21 @@ export function Sidebar() {
                 padding: '12px 0',
                 textDecoration: 'none',
                 transition: 'all 0.3s ease',
-                color: pathname === '/configuracion' ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                color: pathname === '/configuracion' ? colors.textPrimary : colors.textMuted,
                 fontWeight: '400',
                 fontSize: '14px',
                 letterSpacing: '0.02em',
-                borderBottom: pathname === '/configuracion' ? '1px solid rgba(59, 130, 246, 0.5)' : '1px solid transparent'
+                borderBottom: pathname === '/configuracion' ? `1px solid ${colors.borderHover}` : '1px solid transparent'
               }}
               onMouseEnter={(e) => {
                 if (pathname !== '/configuracion') {
-                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
-                  e.currentTarget.style.borderBottomColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.color = colors.textSecondary;
+                  e.currentTarget.style.borderBottomColor = colors.borderColor;
                 }
               }}
               onMouseLeave={(e) => {
                 if (pathname !== '/configuracion') {
-                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                  e.currentTarget.style.color = colors.textMuted;
                   e.currentTarget.style.borderBottomColor = 'transparent';
                 }
               }}
@@ -150,10 +153,48 @@ export function Sidebar() {
         )}
       </nav>
 
+      {/* Theme Toggle */}
+      <div style={{
+        padding: '0 24px 16px',
+      }}>
+        <button
+          onClick={toggleTheme}
+          style={{
+            width: '100%',
+            padding: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.borderColor}`,
+            borderRadius: '2px',
+            color: colors.textSecondary,
+            fontSize: '12px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = colors.borderHover;
+            e.currentTarget.style.color = colors.accent;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = colors.borderColor;
+            e.currentTarget.style.color = colors.textSecondary;
+          }}
+        >
+          {mode === 'dark' ? <FiSun size={16} /> : <FiMoon size={16} />}
+          {mode === 'dark' ? 'Modo Claro' : 'Modo Oscuro'}
+        </button>
+      </div>
+
       {/* User Info */}
       <div style={{
         padding: '24px',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+        borderTop: `1px solid ${colors.borderColor}`
       }}>
         <div style={{
           marginBottom: '16px'
@@ -161,7 +202,7 @@ export function Sidebar() {
           <p style={{
             fontWeight: '400',
             fontSize: '14px',
-            color: 'white',
+            color: colors.textPrimary,
             marginBottom: '4px',
             letterSpacing: '0.01em'
           }}>
@@ -169,7 +210,7 @@ export function Sidebar() {
           </p>
           <p style={{
             fontSize: '11px',
-            color: 'rgba(255, 255, 255, 0.4)',
+            color: colors.textMuted,
             textTransform: 'uppercase',
             letterSpacing: '0.05em',
             fontWeight: '500'
@@ -182,10 +223,10 @@ export function Sidebar() {
           style={{
             width: '100%',
             padding: '10px 0',
-            color: 'rgba(255, 255, 255, 0.5)',
+            color: colors.textMuted,
             background: 'transparent',
             border: 'none',
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            borderTop: `1px solid ${colors.borderColor}`,
             fontSize: '12px',
             fontWeight: '500',
             cursor: 'pointer',
@@ -194,12 +235,12 @@ export function Sidebar() {
             textTransform: 'uppercase'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = 'rgba(239, 68, 68, 0.9)';
-            e.currentTarget.style.borderTopColor = 'rgba(239, 68, 68, 0.3)';
+            e.currentTarget.style.color = colors.error;
+            e.currentTarget.style.borderTopColor = colors.errorBorder;
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
-            e.currentTarget.style.borderTopColor = 'rgba(255, 255, 255, 0.1)';
+            e.currentTarget.style.color = colors.textMuted;
+            e.currentTarget.style.borderTopColor = colors.borderColor;
           }}
         >
           Cerrar Sesión

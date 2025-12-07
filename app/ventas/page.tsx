@@ -7,6 +7,7 @@ import { useProductStore } from '../stores/productStore';
 import { useCashRegisterStore } from '../stores/cashRegisterStore';
 import { useStoreConfigStore } from '../stores/storeConfig';
 import { useAuthStore } from '../stores/authStore';
+import { useThemeStore } from '../stores/themeStore';
 import { Product, Sale, PaymentMethod } from '../types';
 import toast from 'react-hot-toast';
 import {
@@ -35,6 +36,7 @@ export default function VentasPage() {
   const { products, searchProducts, getProductByBarcode, updateStock } = useProductStore();
   const { currentRegister, addSaleToRegister } = useCashRegisterStore();
   const { config } = useStoreConfigStore();
+  const { colors } = useThemeStore();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
@@ -178,7 +180,7 @@ export default function VentasPage() {
 
   return (
     <MainLayout>
-      <div style={{ display: 'flex', height: '100vh', background: '#030712' }}>
+      <div style={{ display: 'flex', height: '100vh', background: colors.bgPrimary }}>
         {/* Panel Izquierdo - Productos */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '20px', overflow: 'hidden' }}>
           {/* Header */}
@@ -186,7 +188,7 @@ export default function VentasPage() {
             <h1 style={{
               fontSize: '14px',
               fontWeight: '500',
-              color: 'rgba(255, 255, 255, 0.6)',
+              color: colors.textSecondary,
               marginBottom: '12px',
               letterSpacing: '0.15em',
               textTransform: 'uppercase'
@@ -202,7 +204,7 @@ export default function VentasPage() {
               left: '16px',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: 'rgba(255, 255, 255, 0.4)',
+              color: colors.textMuted,
               fontSize: '18px'
             }} />
             <input
@@ -218,24 +220,24 @@ export default function VentasPage() {
               style={{
                 width: '100%',
                 padding: '14px 16px 14px 48px',
-                background: '#1d1d1d',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: colors.bgSecondary,
+                border: `1px solid ${colors.borderColor}`,
                 borderRadius: '2px',
-                color: 'white',
+                color: colors.textPrimary,
                 fontSize: '14px',
                 fontWeight: '300',
                 outline: 'none',
                 transition: 'border-color 0.3s ease'
               }}
-              onFocus={(e) => e.target.style.borderColor = 'rgba(59, 130, 246, 0.5)'}
-              onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+              onFocus={(e) => e.target.style.borderColor = colors.borderHover}
+              onBlur={(e) => e.target.style.borderColor = colors.borderColor}
             />
             <span style={{
               position: 'absolute',
               right: '16px',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: 'rgba(255, 255, 255, 0.3)',
+              color: colors.textMuted,
               fontSize: '11px',
               letterSpacing: '0.05em'
             }}>
@@ -250,12 +252,12 @@ export default function VentasPage() {
             alignItems: 'center',
             marginBottom: '16px',
             paddingBottom: '12px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+            borderBottom: `1px solid ${colors.borderColor}`
           }}>
             <span style={{
               fontSize: '11px',
               fontWeight: '500',
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: colors.textMuted,
               letterSpacing: '0.15em',
               textTransform: 'uppercase'
             }}>
@@ -267,12 +269,13 @@ export default function VentasPage() {
                   onClick={() => { setShowAllProducts(true); setSearchQuery(''); }}
                   style={{
                     fontSize: '11px',
-                    color: 'rgba(59, 130, 246, 0.7)',
+                    color: colors.accent,
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
                     letterSpacing: '0.05em',
-                    textTransform: 'uppercase'
+                    textTransform: 'uppercase',
+                    opacity: 0.7
                   }}
                 >
                   Ver todos
@@ -283,11 +286,11 @@ export default function VentasPage() {
                   onClick={() => setViewMode('grid')}
                   style={{
                     padding: '6px',
-                    background: viewMode === 'grid' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                    background: viewMode === 'grid' ? colors.accentBg : 'transparent',
                     border: '1px solid',
-                    borderColor: viewMode === 'grid' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(255, 255, 255, 0.1)',
+                    borderColor: viewMode === 'grid' ? colors.borderHover : colors.borderColor,
                     borderRadius: '2px',
-                    color: viewMode === 'grid' ? '#3b82f6' : 'rgba(255, 255, 255, 0.4)',
+                    color: viewMode === 'grid' ? colors.accent : colors.textMuted,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -301,11 +304,11 @@ export default function VentasPage() {
                   onClick={() => setViewMode('list')}
                   style={{
                     padding: '6px',
-                    background: viewMode === 'list' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                    background: viewMode === 'list' ? colors.accentBg : 'transparent',
                     border: '1px solid',
-                    borderColor: viewMode === 'list' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(255, 255, 255, 0.1)',
+                    borderColor: viewMode === 'list' ? colors.borderHover : colors.borderColor,
                     borderRadius: '2px',
-                    color: viewMode === 'list' ? '#3b82f6' : 'rgba(255, 255, 255, 0.4)',
+                    color: viewMode === 'list' ? colors.accent : colors.textMuted,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -322,7 +325,7 @@ export default function VentasPage() {
           {/* Grid/Lista de productos */}
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '8px' }}>
             {searchResults.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(255, 255, 255, 0.3)' }}>
+              <div style={{ textAlign: 'center', padding: '60px 20px', color: colors.textMuted }}>
                 <FiPackage size={40} style={{ marginBottom: '16px', opacity: 0.5 }} />
                 <p style={{ fontSize: '13px', fontWeight: '300' }}>No se encontraron productos</p>
               </div>
@@ -337,32 +340,32 @@ export default function VentasPage() {
                     key={product.id}
                     onClick={() => handleAddToCart(product)}
                     style={{
-                      background: '#1d1d1d',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: colors.bgSecondary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
                       padding: '16px',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.5)'}
-                    onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = colors.borderHover}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = colors.borderColor}
                   >
                     <div style={{
                       width: '100%',
                       height: '50px',
-                      background: '#2a2a2a',
+                      background: colors.bgTertiary,
                       borderRadius: '2px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       marginBottom: '12px'
                     }}>
-                      <FiPackage style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: '24px' }} />
+                      <FiPackage style={{ color: colors.textMuted, fontSize: '24px' }} />
                     </div>
 
                     <p style={{
                       fontWeight: '400',
-                      color: 'white',
+                      color: colors.textPrimary,
                       fontSize: '13px',
                       marginBottom: '6px',
                       whiteSpace: 'nowrap',
@@ -374,7 +377,7 @@ export default function VentasPage() {
 
                     <p style={{
                       fontSize: '10px',
-                      color: 'rgba(255, 255, 255, 0.4)',
+                      color: colors.textMuted,
                       marginBottom: '10px',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em'
@@ -386,13 +389,13 @@ export default function VentasPage() {
                       <span style={{
                         fontSize: '18px',
                         fontWeight: '300',
-                        color: '#3b82f6'
+                        color: colors.accent
                       }}>
                         ${product.salePrice.toFixed(2)}
                       </span>
                       <span style={{
                         fontSize: '11px',
-                        color: product.stock <= product.minStock ? 'rgba(239, 68, 68, 0.8)' : 'rgba(255, 255, 255, 0.4)'
+                        color: product.stock <= product.minStock ? colors.error : colors.textMuted
                       }}>
                         {product.stock}
                       </span>
@@ -405,10 +408,10 @@ export default function VentasPage() {
                           width: '100%',
                           marginTop: '10px',
                           padding: '8px',
-                          background: 'rgba(16, 185, 129, 0.1)',
-                          border: '1px solid rgba(16, 185, 129, 0.3)',
+                          background: colors.successBg,
+                          border: `1px solid ${colors.successBorder}`,
                           borderRadius: '2px',
-                          color: 'rgba(16, 185, 129, 0.9)',
+                          color: colors.success,
                           fontSize: '11px',
                           cursor: 'pointer',
                           letterSpacing: '0.02em'
@@ -428,8 +431,8 @@ export default function VentasPage() {
                     key={product.id}
                     onClick={() => handleAddToCart(product)}
                     style={{
-                      background: '#1d1d1d',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: colors.bgSecondary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
                       padding: '12px 16px',
                       cursor: 'pointer',
@@ -438,26 +441,26 @@ export default function VentasPage() {
                       alignItems: 'center',
                       gap: '16px'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.5)'}
-                    onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = colors.borderHover}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = colors.borderColor}
                   >
                     <div style={{
                       width: '40px',
                       height: '40px',
-                      background: '#2a2a2a',
+                      background: colors.bgTertiary,
                       borderRadius: '2px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0
                     }}>
-                      <FiPackage style={{ color: 'rgba(255, 255, 255, 0.3)', fontSize: '18px' }} />
+                      <FiPackage style={{ color: colors.textMuted, fontSize: '18px' }} />
                     </div>
 
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{
                         fontWeight: '400',
-                        color: 'white',
+                        color: colors.textPrimary,
                         fontSize: '13px',
                         marginBottom: '2px',
                         whiteSpace: 'nowrap',
@@ -468,7 +471,7 @@ export default function VentasPage() {
                       </p>
                       <p style={{
                         fontSize: '10px',
-                        color: 'rgba(255, 255, 255, 0.4)',
+                        color: colors.textMuted,
                         textTransform: 'uppercase',
                         letterSpacing: '0.05em'
                       }}>
@@ -479,7 +482,7 @@ export default function VentasPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                       <span style={{
                         fontSize: '11px',
-                        color: product.stock <= product.minStock ? 'rgba(239, 68, 68, 0.8)' : 'rgba(255, 255, 255, 0.4)'
+                        color: product.stock <= product.minStock ? colors.error : colors.textMuted
                       }}>
                         Stock: {product.stock}
                       </span>
@@ -489,10 +492,10 @@ export default function VentasPage() {
                           onClick={(e) => { e.stopPropagation(); handleAddToCart(product, true); }}
                           style={{
                             padding: '6px 10px',
-                            background: 'rgba(16, 185, 129, 0.1)',
-                            border: '1px solid rgba(16, 185, 129, 0.3)',
+                            background: colors.successBg,
+                            border: `1px solid ${colors.successBorder}`,
                             borderRadius: '2px',
-                            color: 'rgba(16, 185, 129, 0.9)',
+                            color: colors.success,
                             fontSize: '10px',
                             cursor: 'pointer',
                             letterSpacing: '0.02em',
@@ -506,7 +509,7 @@ export default function VentasPage() {
                       <span style={{
                         fontSize: '16px',
                         fontWeight: '300',
-                        color: '#3b82f6',
+                        color: colors.accent,
                         minWidth: '70px',
                         textAlign: 'right'
                       }}>
@@ -523,22 +526,22 @@ export default function VentasPage() {
         {/* Panel Derecho - Carrito */}
         <div style={{
           width: '380px',
-          background: '#1d1d1d',
-          borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+          background: colors.bgSecondary,
+          borderLeft: `1px solid ${colors.borderColor}`,
           display: 'flex',
           flexDirection: 'column'
         }}>
           {/* Header del carrito */}
           <div style={{
             padding: '20px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+            borderBottom: `1px solid ${colors.borderColor}`
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <span style={{
                   fontSize: '11px',
                   fontWeight: '500',
-                  color: 'rgba(255, 255, 255, 0.5)',
+                  color: colors.textMuted,
                   letterSpacing: '0.15em',
                   textTransform: 'uppercase'
                 }}>
@@ -547,7 +550,7 @@ export default function VentasPage() {
                 <span style={{
                   marginLeft: '12px',
                   fontSize: '12px',
-                  color: 'rgba(255, 255, 255, 0.3)'
+                  color: colors.textMuted
                 }}>
                   {cart.length} productos
                 </span>
@@ -561,9 +564,9 @@ export default function VentasPage() {
                     gap: '6px',
                     padding: '6px 12px',
                     background: 'none',
-                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    border: `1px solid ${colors.errorBorder}`,
                     borderRadius: '2px',
-                    color: 'rgba(239, 68, 68, 0.8)',
+                    color: colors.error,
                     fontSize: '11px',
                     cursor: 'pointer',
                     letterSpacing: '0.02em'
@@ -581,15 +584,15 @@ export default function VentasPage() {
             <div style={{
               margin: '16px',
               padding: '12px 16px',
-              background: 'rgba(251, 191, 36, 0.05)',
-              border: '1px solid rgba(251, 191, 36, 0.2)',
+              background: colors.warningBg,
+              border: `1px solid ${colors.warningBorder}`,
               borderRadius: '2px',
               display: 'flex',
               alignItems: 'center',
               gap: '10px'
             }}>
-              <FiAlertCircle style={{ color: 'rgba(251, 191, 36, 0.8)', flexShrink: 0 }} />
-              <span style={{ fontSize: '12px', color: 'rgba(251, 191, 36, 0.9)', fontWeight: '300' }}>
+              <FiAlertCircle style={{ color: colors.warning, flexShrink: 0 }} />
+              <span style={{ fontSize: '12px', color: colors.warning, fontWeight: '300' }}>
                 Abre la caja para vender
               </span>
             </div>
@@ -605,7 +608,7 @@ export default function VentasPage() {
                 justifyContent: 'center',
                 height: '100%',
                 padding: '60px 20px',
-                color: 'rgba(255, 255, 255, 0.3)'
+                color: colors.textMuted
               }}>
                 <FiShoppingBag size={40} style={{ marginBottom: '16px', opacity: 0.5 }} />
                 <p style={{ fontSize: '13px', fontWeight: '300', marginBottom: '8px' }}>Carrito vacío</p>
@@ -617,8 +620,8 @@ export default function VentasPage() {
                   <div
                     key={`${item.product.id}-${item.isPackage ? 'pkg' : 'unit'}`}
                     style={{
-                      background: '#2a2a2a',
-                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      background: colors.bgTertiary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
                       padding: '14px'
                     }}
@@ -627,7 +630,7 @@ export default function VentasPage() {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{
                           fontWeight: '400',
-                          color: 'white',
+                          color: colors.textPrimary,
                           fontSize: '13px',
                           marginBottom: '4px',
                           whiteSpace: 'nowrap',
@@ -637,16 +640,16 @@ export default function VentasPage() {
                           {item.product.name}
                         </p>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.4)' }}>
+                          <span style={{ fontSize: '12px', color: colors.textMuted }}>
                             ${item.priceUsed.toFixed(2)}
                           </span>
                           {item.isPackage && (
                             <span style={{
                               padding: '2px 6px',
-                              background: 'rgba(16, 185, 129, 0.1)',
-                              border: '1px solid rgba(16, 185, 129, 0.3)',
+                              background: colors.successBg,
+                              border: `1px solid ${colors.successBorder}`,
                               borderRadius: '2px',
-                              color: 'rgba(16, 185, 129, 0.9)',
+                              color: colors.success,
                               fontSize: '9px',
                               textTransform: 'uppercase',
                               letterSpacing: '0.05em'
@@ -661,9 +664,10 @@ export default function VentasPage() {
                         style={{
                           background: 'none',
                           border: 'none',
-                          color: 'rgba(239, 68, 68, 0.6)',
+                          color: colors.error,
                           cursor: 'pointer',
-                          padding: '4px'
+                          padding: '4px',
+                          opacity: 0.6
                         }}
                       >
                         <FiTrash2 size={14} />
@@ -680,10 +684,10 @@ export default function VentasPage() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            background: '#1d1d1d',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            background: colors.bgSecondary,
+                            border: `1px solid ${colors.borderColor}`,
                             borderRadius: '2px',
-                            color: 'rgba(255, 255, 255, 0.6)',
+                            color: colors.textSecondary,
                             cursor: 'pointer'
                           }}
                         >
@@ -696,10 +700,10 @@ export default function VentasPage() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            background: '#1d1d1d',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            background: colors.bgSecondary,
+                            border: `1px solid ${colors.borderColor}`,
                             borderRadius: '2px',
-                            color: 'white',
+                            color: colors.textPrimary,
                             fontSize: '13px'
                           }}
                         >
@@ -713,17 +717,17 @@ export default function VentasPage() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            background: '#1d1d1d',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            background: colors.bgSecondary,
+                            border: `1px solid ${colors.borderColor}`,
                             borderRadius: '2px',
-                            color: 'rgba(255, 255, 255, 0.6)',
+                            color: colors.textSecondary,
                             cursor: 'pointer'
                           }}
                         >
                           <FiPlus size={12} />
                         </button>
                       </div>
-                      <span style={{ fontSize: '15px', fontWeight: '300', color: 'white' }}>
+                      <span style={{ fontSize: '15px', fontWeight: '300', color: colors.textPrimary }}>
                         ${item.subtotal.toFixed(2)}
                       </span>
                     </div>
@@ -736,8 +740,8 @@ export default function VentasPage() {
           {/* Footer del carrito */}
           <div style={{
             padding: '20px',
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-            background: '#1d1d1d'
+            borderTop: `1px solid ${colors.borderColor}`,
+            background: colors.bgSecondary
           }}>
             <div style={{
               display: 'flex',
@@ -748,7 +752,7 @@ export default function VentasPage() {
               <span style={{
                 fontSize: '11px',
                 fontWeight: '500',
-                color: 'rgba(255, 255, 255, 0.5)',
+                color: colors.textMuted,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase'
               }}>
@@ -757,7 +761,7 @@ export default function VentasPage() {
               <span style={{
                 fontSize: '32px',
                 fontWeight: '300',
-                color: 'white',
+                color: colors.textPrimary,
                 letterSpacing: '-0.02em'
               }}>
                 ${cartTotal.toFixed(2)}
@@ -774,11 +778,11 @@ export default function VentasPage() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '10px',
-                background: cart.length === 0 || !currentRegister ? '#2a2a2a' : '#3b82f6',
+                background: cart.length === 0 || !currentRegister ? colors.bgTertiary : colors.accent,
                 border: '1px solid',
-                borderColor: cart.length === 0 || !currentRegister ? 'rgba(255, 255, 255, 0.1)' : 'rgba(59, 130, 246, 0.5)',
+                borderColor: cart.length === 0 || !currentRegister ? colors.borderColor : colors.borderHover,
                 borderRadius: '2px',
-                color: cart.length === 0 || !currentRegister ? 'rgba(255, 255, 255, 0.3)' : 'white',
+                color: cart.length === 0 || !currentRegister ? colors.textMuted : 'white',
                 fontSize: '13px',
                 fontWeight: '500',
                 cursor: cart.length === 0 || !currentRegister ? 'not-allowed' : 'pointer',

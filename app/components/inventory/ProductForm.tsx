@@ -6,7 +6,8 @@ import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
 import { Product, ProductCategory, UnitType } from '../../types';
-import { FiSave, FiX } from 'react-icons/fi';
+import { FiSave, FiX, FiPackage, FiDollarSign } from 'react-icons/fi';
+import { useThemeStore } from '../../stores/themeStore';
 
 interface ProductFormProps {
   isOpen: boolean;
@@ -38,6 +39,7 @@ const units: { value: UnitType; label: string }[] = [
 ];
 
 export function ProductForm({ isOpen, onClose, onSave, product }: ProductFormProps) {
+  const { colors } = useThemeStore();
   const [formData, setFormData] = useState({
     barcode: '',
     name: '',
@@ -148,8 +150,8 @@ export function ProductForm({ isOpen, onClose, onSave, product }: ProductFormPro
       title={product ? 'Editar Producto' : 'Nuevo Producto'}
       size="lg"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
           <Input
             label="Código de Barras"
             value={formData.barcode}
@@ -173,7 +175,7 @@ export function ProductForm({ isOpen, onClose, onSave, product }: ProductFormPro
           placeholder="Descripción del producto"
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
           <Select
             label="Categoría"
             value={formData.category}
@@ -188,7 +190,7 @@ export function ProductForm({ isOpen, onClose, onSave, product }: ProductFormPro
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
           <Input
             label="Precio de Compra"
             type="number"
@@ -211,11 +213,26 @@ export function ProductForm({ isOpen, onClose, onSave, product }: ProductFormPro
           />
         </div>
 
-        <div className="p-3 bg-gray-50 rounded-lg">
-          <p className="text-sm font-medium text-gray-700 mb-3">
-            Precio por Paquete (opcional)
-          </p>
-          <div className="grid grid-cols-2 gap-4">
+        {/* Package Section */}
+        <div style={{
+          padding: '16px',
+          background: colors.bgTertiary,
+          borderRadius: '8px',
+          border: `1px solid ${colors.borderColor}`
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+            <FiPackage style={{ color: colors.accent, fontSize: '16px' }} />
+            <span style={{
+              fontSize: '13px',
+              fontWeight: '500',
+              color: colors.textSecondary,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em'
+            }}>
+              Precio por Paquete (opcional)
+            </span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <Input
               label="Precio del Paquete"
               type="number"
@@ -237,7 +254,7 @@ export function ProductForm({ isOpen, onClose, onSave, product }: ProductFormPro
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
           <Input
             label="Stock Inicial"
             type="number"
@@ -267,23 +284,42 @@ export function ProductForm({ isOpen, onClose, onSave, product }: ProductFormPro
         />
 
         {/* Margin Preview */}
-        {formData.purchasePrice && formData.salePrice && (
-          <div className="p-3 bg-green-50 rounded-lg">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Ganancia por unidad:</span>
-              <span className="font-medium text-green-600">
-                ${(parseFloat(formData.salePrice) - parseFloat(formData.purchasePrice)).toFixed(2)} (
-                {(((parseFloat(formData.salePrice) - parseFloat(formData.purchasePrice)) / parseFloat(formData.purchasePrice)) * 100).toFixed(1)}%)
+        {formData.purchasePrice && formData.salePrice && parseFloat(formData.purchasePrice) > 0 && (
+          <div style={{
+            padding: '16px',
+            background: colors.successBg,
+            borderRadius: '8px',
+            border: `1px solid ${colors.successBorder}`
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <FiDollarSign style={{ color: colors.success, fontSize: '16px' }} />
+              <span style={{
+                fontSize: '13px',
+                fontWeight: '500',
+                color: colors.textSecondary,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>
+                Margen de Ganancia
+              </span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '14px', color: colors.textSecondary }}>Ganancia por unidad:</span>
+              <span style={{ fontSize: '18px', fontWeight: '600', color: colors.success }}>
+                ${(parseFloat(formData.salePrice) - parseFloat(formData.purchasePrice)).toFixed(2)}
+                <span style={{ fontSize: '14px', fontWeight: '400', marginLeft: '8px', opacity: 0.8 }}>
+                  ({(((parseFloat(formData.salePrice) - parseFloat(formData.purchasePrice)) / parseFloat(formData.purchasePrice)) * 100).toFixed(1)}%)
+                </span>
               </span>
             </div>
           </div>
         )}
 
-        <div className="flex gap-3 pt-4">
-          <Button variant="secondary" onClick={onClose} className="flex-1" icon={<FiX />}>
+        <div style={{ display: 'flex', gap: '12px', paddingTop: '16px' }}>
+          <Button variant="secondary" onClick={onClose} style={{ flex: 1 }} icon={<FiX />}>
             Cancelar
           </Button>
-          <Button type="submit" variant="primary" className="flex-1" icon={<FiSave />}>
+          <Button type="submit" variant="primary" style={{ flex: 1 }} icon={<FiSave />}>
             {product ? 'Actualizar' : 'Guardar'}
           </Button>
         </div>

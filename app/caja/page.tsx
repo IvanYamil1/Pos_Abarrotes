@@ -5,6 +5,7 @@ import { MainLayout } from '../components/layout/MainLayout';
 import { useCashRegisterStore } from '../stores/cashRegisterStore';
 import { useSalesStore } from '../stores/salesStore';
 import { useAuthStore } from '../stores/authStore';
+import { useThemeStore } from '../stores/themeStore';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import toast from 'react-hot-toast';
@@ -36,6 +37,7 @@ export default function CajaPage() {
     getExpensesByRegister,
   } = useCashRegisterStore();
   const { getSalesToday } = useSalesStore();
+  const { colors } = useThemeStore();
 
   // Modal states
   const [openCashModalOpen, setOpenCashModalOpen] = useState(false);
@@ -134,14 +136,14 @@ export default function CajaPage() {
 
   return (
     <MainLayout>
-      <div style={{ padding: '20px', background: '#030712', minHeight: '100vh' }}>
+      <div style={{ padding: '20px', background: colors.bgPrimary, minHeight: '100vh' }}>
         {/* Header */}
         <div style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
             <h1 style={{
               fontSize: '14px',
               fontWeight: '500',
-              color: 'rgba(255, 255, 255, 0.6)',
+              color: colors.textSecondary,
               marginBottom: '12px',
               letterSpacing: '0.15em',
               textTransform: 'uppercase'
@@ -149,7 +151,7 @@ export default function CajaPage() {
               Caja
             </h1>
             <p style={{
-              color: 'rgba(255, 255, 255, 0.4)',
+              color: colors.textMuted,
               fontSize: '14px',
               fontWeight: '300',
               letterSpacing: '0.02em'
@@ -165,10 +167,10 @@ export default function CajaPage() {
                 alignItems: 'center',
                 gap: '8px',
                 padding: '12px 20px',
-                background: '#2a2a2a',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: colors.bgTertiary,
+                border: `1px solid ${colors.borderColor}`,
                 borderRadius: '2px',
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: colors.textSecondary,
                 fontSize: '12px',
                 fontWeight: '500',
                 cursor: 'pointer',
@@ -230,8 +232,8 @@ export default function CajaPage() {
         {/* Cash Status */}
         {!currentRegister ? (
           <div style={{
-            background: '#1d1d1d',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.borderColor}`,
             borderRadius: '2px',
             padding: '60px 20px',
             textAlign: 'center',
@@ -240,17 +242,17 @@ export default function CajaPage() {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            <FiLock size={48} style={{ color: 'rgba(255, 255, 255, 0.2)', marginBottom: '20px' }} />
+            <FiLock size={48} style={{ color: colors.textMuted, marginBottom: '20px' }} />
             <h2 style={{
               fontSize: '18px',
               fontWeight: '400',
-              color: 'white',
+              color: colors.textPrimary,
               marginBottom: '8px'
             }}>
               Caja Cerrada
             </h2>
             <p style={{
-              color: 'rgba(255, 255, 255, 0.4)',
+              color: colors.textMuted,
               fontSize: '13px',
               fontWeight: '300',
               marginBottom: '24px'
@@ -289,27 +291,27 @@ export default function CajaPage() {
               marginBottom: '24px'
             }}>
               {[
-                { label: 'Monto de Apertura', value: currentRegister.openingAmount, color: '#3b82f6', icon: FiDollarSign },
-                { label: 'Ventas del Turno', value: currentRegister.salesTotal, color: '#10b981', icon: FiTrendingUp },
-                { label: 'Gastos', value: currentRegister.expensesTotal, color: '#ef4444', icon: FiTrendingDown },
+                { label: 'Monto de Apertura', value: currentRegister.openingAmount, color: colors.accent, icon: FiDollarSign },
+                { label: 'Ventas del Turno', value: currentRegister.salesTotal, color: colors.success, icon: FiTrendingUp },
+                { label: 'Gastos', value: currentRegister.expensesTotal, color: colors.error, icon: FiTrendingDown },
                 { label: 'Efectivo Esperado', value: currentRegister.expectedAmount, color: '#8b5cf6', icon: FiDollarSign },
               ].map((stat) => (
                 <div
                   key={stat.label}
                   style={{
-                    background: '#1d1d1d',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: colors.bgSecondary,
+                    border: `1px solid ${colors.borderColor}`,
                     borderRadius: '2px',
                     padding: '20px',
                     transition: 'border-color 0.3s ease'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.5)'}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = colors.borderHover}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = colors.borderColor}
                 >
                   <p style={{
                     fontSize: '11px',
                     fontWeight: '500',
-                    color: 'rgba(255, 255, 255, 0.5)',
+                    color: colors.textMuted,
                     letterSpacing: '0.15em',
                     textTransform: 'uppercase',
                     marginBottom: '12px'
@@ -331,20 +333,20 @@ export default function CajaPage() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
               {/* Sales Breakdown */}
               <div style={{
-                background: '#1d1d1d',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: colors.bgSecondary,
+                border: `1px solid ${colors.borderColor}`,
                 borderRadius: '2px',
                 padding: '20px'
               }}>
                 <div style={{
                   marginBottom: '20px',
                   paddingBottom: '16px',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                  borderBottom: `1px solid ${colors.borderColor}`
                 }}>
                   <h3 style={{
                     fontSize: '11px',
                     fontWeight: '500',
-                    color: 'rgba(255, 255, 255, 0.5)',
+                    color: colors.textMuted,
                     letterSpacing: '0.15em',
                     textTransform: 'uppercase'
                   }}>
@@ -354,9 +356,9 @@ export default function CajaPage() {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {[
-                    { label: 'Efectivo', value: cashSales, color: '#10b981', icon: FiDollarSign },
-                    { label: 'Tarjeta', value: cardSales, color: '#3b82f6', icon: FiCreditCard },
-                    { label: 'Vales', value: voucherSales, color: '#f59e0b', icon: FiGift },
+                    { label: 'Efectivo', value: cashSales, color: colors.success, icon: FiDollarSign },
+                    { label: 'Tarjeta', value: cardSales, color: colors.accent, icon: FiCreditCard },
+                    { label: 'Vales', value: voucherSales, color: colors.warning, icon: FiGift },
                   ].map((item) => (
                     <div
                       key={item.label}
@@ -365,7 +367,7 @@ export default function CajaPage() {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         padding: '12px',
-                        background: '#2a2a2a',
+                        background: colors.bgTertiary,
                         borderRadius: '2px'
                       }}
                     >
@@ -381,11 +383,11 @@ export default function CajaPage() {
                         }}>
                           <item.icon size={16} style={{ color: item.color }} />
                         </div>
-                        <span style={{ fontSize: '13px', color: 'white', fontWeight: '400' }}>
+                        <span style={{ fontSize: '13px', color: colors.textPrimary, fontWeight: '400' }}>
                           {item.label}
                         </span>
                       </div>
-                      <span style={{ fontSize: '15px', fontWeight: '300', color: 'white' }}>
+                      <span style={{ fontSize: '15px', fontWeight: '300', color: colors.textPrimary }}>
                         ${item.value.toFixed(2)}
                       </span>
                     </div>
@@ -395,15 +397,15 @@ export default function CajaPage() {
 
               {/* Expenses */}
               <div style={{
-                background: '#1d1d1d',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: colors.bgSecondary,
+                border: `1px solid ${colors.borderColor}`,
                 borderRadius: '2px',
                 padding: '20px'
               }}>
                 <div style={{
                   marginBottom: '20px',
                   paddingBottom: '16px',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderBottom: `1px solid ${colors.borderColor}`,
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center'
@@ -411,7 +413,7 @@ export default function CajaPage() {
                   <h3 style={{
                     fontSize: '11px',
                     fontWeight: '500',
-                    color: 'rgba(255, 255, 255, 0.5)',
+                    color: colors.textMuted,
                     letterSpacing: '0.15em',
                     textTransform: 'uppercase'
                   }}>
@@ -425,9 +427,9 @@ export default function CajaPage() {
                       gap: '6px',
                       padding: '6px 12px',
                       background: 'transparent',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
-                      color: 'rgba(255, 255, 255, 0.5)',
+                      color: colors.textMuted,
                       fontSize: '11px',
                       cursor: 'pointer',
                       letterSpacing: '0.05em',
@@ -443,7 +445,7 @@ export default function CajaPage() {
                   <div style={{
                     textAlign: 'center',
                     padding: '40px 20px',
-                    color: 'rgba(255, 255, 255, 0.3)'
+                    color: colors.textMuted
                   }}>
                     <p style={{ fontSize: '13px', fontWeight: '300' }}>No hay gastos registrados</p>
                   </div>
@@ -457,20 +459,20 @@ export default function CajaPage() {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           padding: '12px',
-                          background: 'rgba(239, 68, 68, 0.05)',
-                          border: '1px solid rgba(239, 68, 68, 0.1)',
+                          background: colors.errorBg,
+                          border: `1px solid ${colors.errorBorder}`,
                           borderRadius: '2px'
                         }}
                       >
                         <div>
-                          <p style={{ fontSize: '13px', color: 'white', fontWeight: '400', marginBottom: '2px' }}>
+                          <p style={{ fontSize: '13px', color: colors.textPrimary, fontWeight: '400', marginBottom: '2px' }}>
                             {expense.description}
                           </p>
-                          <p style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)' }}>
+                          <p style={{ fontSize: '11px', color: colors.textMuted }}>
                             {expense.category} • {format(new Date(expense.createdAt), 'HH:mm')}
                           </p>
                         </div>
-                        <span style={{ fontSize: '14px', fontWeight: '400', color: '#ef4444' }}>
+                        <span style={{ fontSize: '14px', fontWeight: '400', color: colors.error }}>
                           -${expense.amount.toFixed(2)}
                         </span>
                       </div>
@@ -482,24 +484,24 @@ export default function CajaPage() {
 
             {/* Cash Register Info */}
             <div style={{
-              background: '#1d1d1d',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: colors.bgSecondary,
+              border: `1px solid ${colors.borderColor}`,
               borderRadius: '2px',
               padding: '16px 20px',
               display: 'flex',
               alignItems: 'center',
               gap: '12px'
             }}>
-              <FiClock size={16} style={{ color: 'rgba(255, 255, 255, 0.4)' }} />
-              <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.5)' }}>
+              <FiClock size={16} style={{ color: colors.textMuted }} />
+              <span style={{ fontSize: '13px', color: colors.textMuted }}>
                 Caja abierta: {format(new Date(currentRegister.openedAt), "dd/MM/yyyy 'a las' HH:mm", { locale: es })}
               </span>
               <span style={{
                 padding: '4px 10px',
-                background: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
+                background: colors.successBg,
+                border: `1px solid ${colors.successBorder}`,
                 borderRadius: '2px',
-                color: '#10b981',
+                color: colors.success,
                 fontSize: '10px',
                 fontWeight: '500',
                 letterSpacing: '0.05em',
@@ -529,41 +531,41 @@ export default function CajaPage() {
           />
           <div style={{
             position: 'relative',
-            background: '#1d1d1d',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.borderColor}`,
             borderRadius: '2px',
             width: '100%',
             maxWidth: '400px'
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              borderBottom: `1px solid ${colors.borderColor}`,
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center'
             }}>
-              <span style={{ fontSize: '11px', fontWeight: '500', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: '500', color: colors.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
                 Abrir Caja
               </span>
               <button
                 onClick={() => setOpenCashModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.4)', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer' }}
               >
                 <FiX size={20} />
               </button>
             </div>
 
             <div style={{ padding: '24px' }}>
-              <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '20px' }}>
+              <p style={{ fontSize: '13px', color: colors.textMuted, marginBottom: '20px' }}>
                 Ingresa el monto inicial con el que abres la caja.
               </p>
 
               <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: colors.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
                   Monto de Apertura
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <FiDollarSign style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255, 255, 255, 0.4)' }} />
+                  <FiDollarSign style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: colors.textMuted }} />
                   <input
                     type="number"
                     value={openingAmount}
@@ -572,10 +574,10 @@ export default function CajaPage() {
                     style={{
                       width: '100%',
                       padding: '12px 14px 12px 42px',
-                      background: '#2a2a2a',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: colors.bgTertiary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
-                      color: 'white',
+                      color: colors.textPrimary,
                       fontSize: '16px',
                       fontWeight: '300',
                       outline: 'none'
@@ -590,10 +592,10 @@ export default function CajaPage() {
                   style={{
                     flex: 1,
                     padding: '12px',
-                    background: '#2a2a2a',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: colors.bgTertiary,
+                    border: `1px solid ${colors.borderColor}`,
                     borderRadius: '2px',
-                    color: 'rgba(255, 255, 255, 0.6)',
+                    color: colors.textSecondary,
                     fontSize: '12px',
                     cursor: 'pointer',
                     letterSpacing: '0.05em',
@@ -611,8 +613,8 @@ export default function CajaPage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '8px',
-                    background: '#10b981',
-                    border: '1px solid rgba(16, 185, 129, 0.5)',
+                    background: colors.success,
+                    border: `1px solid ${colors.successBorder}`,
                     borderRadius: '2px',
                     color: 'white',
                     fontSize: '12px',
@@ -647,25 +649,25 @@ export default function CajaPage() {
           />
           <div style={{
             position: 'relative',
-            background: '#1d1d1d',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.borderColor}`,
             borderRadius: '2px',
             width: '100%',
             maxWidth: '480px'
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              borderBottom: `1px solid ${colors.borderColor}`,
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center'
             }}>
-              <span style={{ fontSize: '11px', fontWeight: '500', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: '500', color: colors.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
                 Cerrar Caja
               </span>
               <button
                 onClick={() => setCloseCashModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.4)', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer' }}
               >
                 <FiX size={20} />
               </button>
@@ -674,36 +676,36 @@ export default function CajaPage() {
             <div style={{ padding: '24px' }}>
               {/* Summary */}
               <div style={{
-                background: '#2a2a2a',
+                background: colors.bgTertiary,
                 borderRadius: '2px',
                 padding: '16px',
                 marginBottom: '20px'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.5)' }}>Monto de apertura:</span>
-                  <span style={{ fontSize: '13px', color: 'white' }}>${currentRegister.openingAmount.toFixed(2)}</span>
+                  <span style={{ fontSize: '13px', color: colors.textMuted }}>Monto de apertura:</span>
+                  <span style={{ fontSize: '13px', color: colors.textPrimary }}>${currentRegister.openingAmount.toFixed(2)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.5)' }}>Ventas en efectivo:</span>
-                  <span style={{ fontSize: '13px', color: '#10b981' }}>+${cashSales.toFixed(2)}</span>
+                  <span style={{ fontSize: '13px', color: colors.textMuted }}>Ventas en efectivo:</span>
+                  <span style={{ fontSize: '13px', color: colors.success }}>+${cashSales.toFixed(2)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.5)' }}>Gastos:</span>
-                  <span style={{ fontSize: '13px', color: '#ef4444' }}>-${totalExpenses.toFixed(2)}</span>
+                  <span style={{ fontSize: '13px', color: colors.textMuted }}>Gastos:</span>
+                  <span style={{ fontSize: '13px', color: colors.error }}>-${totalExpenses.toFixed(2)}</span>
                 </div>
-                <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: '13px', fontWeight: '500', color: 'white' }}>Efectivo esperado:</span>
-                  <span style={{ fontSize: '16px', fontWeight: '400', color: 'white' }}>${currentRegister.expectedAmount.toFixed(2)}</span>
+                <div style={{ borderTop: `1px solid ${colors.borderColor}`, paddingTop: '12px', display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '13px', fontWeight: '500', color: colors.textPrimary }}>Efectivo esperado:</span>
+                  <span style={{ fontSize: '16px', fontWeight: '400', color: colors.textPrimary }}>${currentRegister.expectedAmount.toFixed(2)}</span>
                 </div>
               </div>
 
               {/* Input */}
               <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: colors.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
                   Efectivo Real en Caja
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <FiDollarSign style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255, 255, 255, 0.4)' }} />
+                  <FiDollarSign style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: colors.textMuted }} />
                   <input
                     type="number"
                     value={closingAmount}
@@ -712,10 +714,10 @@ export default function CajaPage() {
                     style={{
                       width: '100%',
                       padding: '12px 14px 12px 42px',
-                      background: '#2a2a2a',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: colors.bgTertiary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
-                      color: 'white',
+                      color: colors.textPrimary,
                       fontSize: '16px',
                       fontWeight: '300',
                       outline: 'none'
@@ -731,35 +733,35 @@ export default function CajaPage() {
                   borderRadius: '2px',
                   marginBottom: '20px',
                   background: parseFloat(closingAmount) === currentRegister.expectedAmount
-                    ? 'rgba(59, 130, 246, 0.1)'
+                    ? colors.accentBg
                     : parseFloat(closingAmount) > currentRegister.expectedAmount
-                    ? 'rgba(16, 185, 129, 0.1)'
-                    : 'rgba(239, 68, 68, 0.1)',
+                    ? colors.successBg
+                    : colors.errorBg,
                   border: `1px solid ${
                     parseFloat(closingAmount) === currentRegister.expectedAmount
-                      ? 'rgba(59, 130, 246, 0.3)'
+                      ? colors.accentBorder
                       : parseFloat(closingAmount) > currentRegister.expectedAmount
-                      ? 'rgba(16, 185, 129, 0.3)'
-                      : 'rgba(239, 68, 68, 0.3)'
+                      ? colors.successBorder
+                      : colors.errorBorder
                   }`
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {parseFloat(closingAmount) === currentRegister.expectedAmount ? (
                       <>
-                        <FiCheck style={{ color: '#3b82f6' }} />
-                        <span style={{ fontSize: '13px', fontWeight: '500', color: '#3b82f6' }}>Caja cuadrada</span>
+                        <FiCheck style={{ color: colors.accent }} />
+                        <span style={{ fontSize: '13px', fontWeight: '500', color: colors.accent }}>Caja cuadrada</span>
                       </>
                     ) : parseFloat(closingAmount) > currentRegister.expectedAmount ? (
                       <>
-                        <FiAlertCircle style={{ color: '#10b981' }} />
-                        <span style={{ fontSize: '13px', fontWeight: '500', color: '#10b981' }}>
+                        <FiAlertCircle style={{ color: colors.success }} />
+                        <span style={{ fontSize: '13px', fontWeight: '500', color: colors.success }}>
                           Sobrante: ${(parseFloat(closingAmount) - currentRegister.expectedAmount).toFixed(2)}
                         </span>
                       </>
                     ) : (
                       <>
-                        <FiAlertCircle style={{ color: '#ef4444' }} />
-                        <span style={{ fontSize: '13px', fontWeight: '500', color: '#ef4444' }}>
+                        <FiAlertCircle style={{ color: colors.error }} />
+                        <span style={{ fontSize: '13px', fontWeight: '500', color: colors.error }}>
                           Faltante: ${(currentRegister.expectedAmount - parseFloat(closingAmount)).toFixed(2)}
                         </span>
                       </>
@@ -774,10 +776,10 @@ export default function CajaPage() {
                   style={{
                     flex: 1,
                     padding: '12px',
-                    background: '#2a2a2a',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: colors.bgTertiary,
+                    border: `1px solid ${colors.borderColor}`,
                     borderRadius: '2px',
-                    color: 'rgba(255, 255, 255, 0.6)',
+                    color: colors.textSecondary,
                     fontSize: '12px',
                     cursor: 'pointer',
                     letterSpacing: '0.05em',
@@ -795,10 +797,10 @@ export default function CajaPage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '8px',
-                    background: 'rgba(239, 68, 68, 0.1)',
-                    border: '1px solid rgba(239, 68, 68, 0.5)',
+                    background: colors.errorBg,
+                    border: `1px solid ${colors.errorBorder}`,
                     borderRadius: '2px',
-                    color: '#ef4444',
+                    color: colors.error,
                     fontSize: '12px',
                     cursor: 'pointer',
                     letterSpacing: '0.05em',
@@ -831,25 +833,25 @@ export default function CajaPage() {
           />
           <div style={{
             position: 'relative',
-            background: '#1d1d1d',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.borderColor}`,
             borderRadius: '2px',
             width: '100%',
             maxWidth: '440px'
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              borderBottom: `1px solid ${colors.borderColor}`,
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center'
             }}>
-              <span style={{ fontSize: '11px', fontWeight: '500', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: '500', color: colors.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
                 Registrar Gasto
               </span>
               <button
                 onClick={() => setExpenseModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.4)', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer' }}
               >
                 <FiX size={20} />
               </button>
@@ -858,7 +860,7 @@ export default function CajaPage() {
             <div style={{ padding: '24px' }}>
               {/* Description */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: colors.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
                   Descripción
                 </label>
                 <input
@@ -869,10 +871,10 @@ export default function CajaPage() {
                   style={{
                     width: '100%',
                     padding: '12px 14px',
-                    background: '#2a2a2a',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: colors.bgTertiary,
+                    border: `1px solid ${colors.borderColor}`,
                     borderRadius: '2px',
-                    color: 'white',
+                    color: colors.textPrimary,
                     fontSize: '13px',
                     fontWeight: '300',
                     outline: 'none'
@@ -882,11 +884,11 @@ export default function CajaPage() {
 
               {/* Amount */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: colors.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
                   Monto
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <FiDollarSign style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255, 255, 255, 0.4)' }} />
+                  <FiDollarSign style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: colors.textMuted }} />
                   <input
                     type="number"
                     value={expenseAmount}
@@ -895,10 +897,10 @@ export default function CajaPage() {
                     style={{
                       width: '100%',
                       padding: '12px 14px 12px 42px',
-                      background: '#2a2a2a',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: colors.bgTertiary,
+                      border: `1px solid ${colors.borderColor}`,
                       borderRadius: '2px',
-                      color: 'white',
+                      color: colors.textPrimary,
                       fontSize: '13px',
                       fontWeight: '300',
                       outline: 'none'
@@ -909,7 +911,7 @@ export default function CajaPage() {
 
               {/* Category */}
               <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '11px', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: colors.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '8px' }}>
                   Categoría
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
@@ -919,11 +921,11 @@ export default function CajaPage() {
                       onClick={() => setExpenseCategory(cat.value)}
                       style={{
                         padding: '10px',
-                        background: expenseCategory === cat.value ? 'rgba(59, 130, 246, 0.1)' : '#2a2a2a',
+                        background: expenseCategory === cat.value ? colors.accentBg : colors.bgTertiary,
                         border: '1px solid',
-                        borderColor: expenseCategory === cat.value ? 'rgba(59, 130, 246, 0.5)' : 'rgba(255, 255, 255, 0.1)',
+                        borderColor: expenseCategory === cat.value ? colors.accentBorder : colors.borderColor,
                         borderRadius: '2px',
-                        color: expenseCategory === cat.value ? '#3b82f6' : 'rgba(255, 255, 255, 0.6)',
+                        color: expenseCategory === cat.value ? colors.accent : colors.textSecondary,
                         fontSize: '11px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease'
@@ -941,10 +943,10 @@ export default function CajaPage() {
                   style={{
                     flex: 1,
                     padding: '12px',
-                    background: '#2a2a2a',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: colors.bgTertiary,
+                    border: `1px solid ${colors.borderColor}`,
                     borderRadius: '2px',
-                    color: 'rgba(255, 255, 255, 0.6)',
+                    color: colors.textSecondary,
                     fontSize: '12px',
                     cursor: 'pointer',
                     letterSpacing: '0.05em',
@@ -962,8 +964,8 @@ export default function CajaPage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '8px',
-                    background: '#3b82f6',
-                    border: '1px solid rgba(59, 130, 246, 0.5)',
+                    background: colors.accent,
+                    border: `1px solid ${colors.accentBorder}`,
                     borderRadius: '2px',
                     color: 'white',
                     fontSize: '12px',
@@ -998,8 +1000,8 @@ export default function CajaPage() {
           />
           <div style={{
             position: 'relative',
-            background: '#1d1d1d',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.borderColor}`,
             borderRadius: '2px',
             width: '100%',
             maxWidth: '700px',
@@ -1009,17 +1011,17 @@ export default function CajaPage() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              borderBottom: `1px solid ${colors.borderColor}`,
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center'
             }}>
-              <span style={{ fontSize: '11px', fontWeight: '500', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: '500', color: colors.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
                 Historial de Cajas
               </span>
               <button
                 onClick={() => setHistoryModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.4)', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer' }}
               >
                 <FiX size={20} />
               </button>
@@ -1027,7 +1029,7 @@ export default function CajaPage() {
 
             <div style={{ padding: '24px', overflowY: 'auto', flex: 1 }}>
               {registers.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '40px 20px', color: 'rgba(255, 255, 255, 0.3)' }}>
+                <div style={{ textAlign: 'center', padding: '40px 20px', color: colors.textMuted }}>
                   <p style={{ fontSize: '13px', fontWeight: '300' }}>No hay registros de caja</p>
                 </div>
               ) : (
@@ -1037,9 +1039,9 @@ export default function CajaPage() {
                       key={register.id}
                       style={{
                         padding: '16px',
-                        background: register.status === 'abierta' ? 'rgba(16, 185, 129, 0.05)' : '#2a2a2a',
+                        background: register.status === 'abierta' ? colors.successBg : colors.bgTertiary,
                         border: '1px solid',
-                        borderColor: register.status === 'abierta' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                        borderColor: register.status === 'abierta' ? colors.successBorder : colors.borderColor,
                         borderRadius: '2px'
                       }}
                     >
@@ -1047,11 +1049,11 @@ export default function CajaPage() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <span style={{
                             padding: '3px 8px',
-                            background: register.status === 'abierta' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+                            background: register.status === 'abierta' ? colors.successBg : colors.bgSecondary,
                             border: '1px solid',
-                            borderColor: register.status === 'abierta' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255, 255, 255, 0.1)',
+                            borderColor: register.status === 'abierta' ? colors.successBorder : colors.borderColor,
                             borderRadius: '2px',
-                            color: register.status === 'abierta' ? '#10b981' : 'rgba(255, 255, 255, 0.5)',
+                            color: register.status === 'abierta' ? colors.success : colors.textMuted,
                             fontSize: '10px',
                             fontWeight: '500',
                             letterSpacing: '0.05em',
@@ -1059,36 +1061,36 @@ export default function CajaPage() {
                           }}>
                             {register.status === 'abierta' ? 'Activa' : 'Cerrada'}
                           </span>
-                          <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.4)' }}>
+                          <span style={{ fontSize: '12px', color: colors.textMuted }}>
                             {format(new Date(register.openedAt), 'dd/MM/yyyy HH:mm', { locale: es })}
                           </span>
                         </div>
                         {register.closedAt && (
-                          <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.4)' }}>
+                          <span style={{ fontSize: '12px', color: colors.textMuted }}>
                             Cerrada: {format(new Date(register.closedAt), 'HH:mm', { locale: es })}
                           </span>
                         )}
                       </div>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
                         <div>
-                          <p style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Apertura</p>
-                          <p style={{ fontSize: '13px', color: 'white', fontWeight: '400' }}>${register.openingAmount.toFixed(2)}</p>
+                          <p style={{ fontSize: '10px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Apertura</p>
+                          <p style={{ fontSize: '13px', color: colors.textPrimary, fontWeight: '400' }}>${register.openingAmount.toFixed(2)}</p>
                         </div>
                         <div>
-                          <p style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Ventas</p>
-                          <p style={{ fontSize: '13px', color: '#10b981', fontWeight: '400' }}>+${register.salesTotal.toFixed(2)}</p>
+                          <p style={{ fontSize: '10px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Ventas</p>
+                          <p style={{ fontSize: '13px', color: colors.success, fontWeight: '400' }}>+${register.salesTotal.toFixed(2)}</p>
                         </div>
                         <div>
-                          <p style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Gastos</p>
-                          <p style={{ fontSize: '13px', color: '#ef4444', fontWeight: '400' }}>-${register.expensesTotal.toFixed(2)}</p>
+                          <p style={{ fontSize: '10px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Gastos</p>
+                          <p style={{ fontSize: '13px', color: colors.error, fontWeight: '400' }}>-${register.expensesTotal.toFixed(2)}</p>
                         </div>
                         {register.closingAmount !== undefined && (
                           <div>
-                            <p style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Diferencia</p>
+                            <p style={{ fontSize: '10px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Diferencia</p>
                             <p style={{
                               fontSize: '13px',
                               fontWeight: '400',
-                              color: register.difference! > 0 ? '#10b981' : register.difference! < 0 ? '#ef4444' : '#3b82f6'
+                              color: register.difference! > 0 ? colors.success : register.difference! < 0 ? colors.error : colors.accent
                             }}>
                               {register.difference! > 0 ? '+' : ''}${register.difference!.toFixed(2)}
                             </p>
