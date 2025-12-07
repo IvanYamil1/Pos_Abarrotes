@@ -86,7 +86,7 @@ export default function ReportesPage() {
             name: item.productName,
             quantity: 0,
             revenue: 0,
-            cost: product ? product.purchasePrice * item.quantity : 0,
+            cost: 0,
           };
         }
         productSales[item.productId].quantity += item.quantity;

@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
 import { Product, MovementType } from '../../types';
-import { FiPlus, FiMinus, FiRefreshCw, FiCheck } from 'react-icons/fi';
+import { useThemeStore } from '../../stores/themeStore';
+import { FiPlus, FiMinus, FiRefreshCw, FiCheck, FiPackage, FiAlertTriangle } from 'react-icons/fi';
 
 interface StockAdjustmentProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export function StockAdjustment({
   product,
   onConfirm,
 }: StockAdjustmentProps) {
+  const { colors } = useThemeStore();
   const [movementType, setMovementType] = useState<MovementType>('entrada');
   const [quantity, setQuantity] = useState('');
   const [reason, setReason] = useState('');
@@ -53,10 +55,10 @@ export function StockAdjustment({
   };
 
   const movementTypes = [
-    { value: 'entrada', label: 'Entrada de Inventario', icon: FiPlus },
-    { value: 'salida', label: 'Salida de Inventario', icon: FiMinus },
-    { value: 'ajuste', label: 'Ajuste de Stock', icon: FiRefreshCw },
-    { value: 'devolucion', label: 'Devolución', icon: FiPlus },
+    { value: 'entrada', label: 'Entrada', icon: FiPlus, color: colors.success },
+    { value: 'salida', label: 'Salida', icon: FiMinus, color: colors.error },
+    { value: 'ajuste', label: 'Ajuste', icon: FiRefreshCw, color: colors.accent },
+    { value: 'devolucion', label: 'Devolución', icon: FiPlus, color: colors.warning },
   ];
 
   const reasonOptions = [
@@ -70,48 +72,144 @@ export function StockAdjustment({
     { value: 'Otro', label: 'Otro' },
   ];
 
+  const getUnitLabel = () => {
+    switch (product.unit) {
+      case 'kilo': return 'kg';
+      case 'litro': return 'L';
+      default: return 'unidades';
+    }
+  };
+
+  const newStock = getNewStock();
+  const isLowStock = newStock <= product.minStock;
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Ajustar Inventario" size="md">
-      <div className="space-y-4">
+    <Modal isOpen={isOpen} onClose={onClose} title="Ajustar Inventario" size="lg">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
         {/* Product Info */}
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-semibold text-gray-900">{product.name}</h3>
-          <p className="text-sm text-gray-500">Código: {product.barcode}</p>
-          <p className="text-lg font-bold text-blue-600 mt-2">
-            Stock actual: {product.stock} {product.unit === 'kilo' ? 'kg' : product.unit === 'litro' ? 'L' : 'unidades'}
-          </p>
+        <div style={{
+          padding: '16px',
+          background: colors.bgTertiary,
+          borderRadius: '2px',
+          border: `1px solid ${colors.borderColor}`,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px'
+        }}>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            background: colors.accentBg,
+            border: `1px solid ${colors.accentBorder}`,
+            borderRadius: '2px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <FiPackage size={24} style={{ color: colors.accent }} />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h3 style={{
+              fontSize: '14px',
+              fontWeight: '500',
+              color: colors.textPrimary,
+              marginBottom: '4px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>
+              {product.name}
+            </h3>
+            <p style={{
+              fontSize: '12px',
+              color: colors.textMuted,
+              marginBottom: '8px'
+            }}>
+              Código: {product.barcode}
+            </p>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px 10px',
+              background: colors.accentBg,
+              border: `1px solid ${colors.accentBorder}`,
+              borderRadius: '2px'
+            }}>
+              <span style={{ fontSize: '11px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Stock actual:
+              </span>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: colors.accent }}>
+                {product.stock} {getUnitLabel()}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Movement Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label style={{
+            display: 'block',
+            fontSize: '11px',
+            fontWeight: '500',
+            color: colors.textMuted,
+            marginBottom: '10px',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase'
+          }}>
             Tipo de Movimiento
           </label>
-          <div className="grid grid-cols-2 gap-2">
-            {movementTypes.map((type) => (
-              <button
-                key={type.value}
-                onClick={() => setMovementType(type.value as MovementType)}
-                className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all ${
-                  movementType === type.value
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <type.icon
-                  className={`w-5 h-5 ${
-                    movementType === type.value ? 'text-blue-600' : 'text-gray-400'
-                  }`}
-                />
-                <span
-                  className={`text-sm font-medium ${
-                    movementType === type.value ? 'text-blue-600' : 'text-gray-600'
-                  }`}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '10px'
+          }}>
+            {movementTypes.map((type) => {
+              const isSelected = movementType === type.value;
+              return (
+                <button
+                  key={type.value}
+                  onClick={() => setMovementType(type.value as MovementType)}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    padding: '12px 16px',
+                    borderRadius: '2px',
+                    border: `1px solid ${isSelected ? type.color : colors.borderColor}`,
+                    background: isSelected ? `${type.color}15` : colors.bgTertiary,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = colors.borderHover;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = colors.borderColor;
+                    }
+                  }}
                 >
-                  {type.label}
-                </span>
-              </button>
-            ))}
+                  <type.icon
+                    size={18}
+                    style={{ color: isSelected ? type.color : colors.textMuted }}
+                  />
+                  <span style={{
+                    fontSize: '13px',
+                    fontWeight: '500',
+                    color: isSelected ? type.color : colors.textSecondary
+                  }}>
+                    {type.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -137,40 +235,75 @@ export function StockAdjustment({
         {reason === 'Otro' && (
           <Input
             label="Especificar razón"
-            value={reason === 'Otro' ? '' : reason}
+            value=""
             onChange={(e) => setReason(e.target.value)}
             placeholder="Describe la razón..."
           />
         )}
 
         {/* Preview */}
-        {quantity && (
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Stock resultante:</span>
-              <span className={`text-xl font-bold ${
-                getNewStock() <= product.minStock ? 'text-red-600' : 'text-green-600'
-              }`}>
-                {getNewStock()} {product.unit === 'kilo' ? 'kg' : product.unit === 'litro' ? 'L' : 'unidades'}
+        {quantity && parseFloat(quantity) > 0 && (
+          <div style={{
+            padding: '16px',
+            background: isLowStock ? colors.warningBg : colors.successBg,
+            border: `1px solid ${isLowStock ? colors.warningBorder : colors.successBorder}`,
+            borderRadius: '2px'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <span style={{
+                fontSize: '13px',
+                color: colors.textSecondary
+              }}>
+                Stock resultante:
+              </span>
+              <span style={{
+                fontSize: '24px',
+                fontWeight: '300',
+                color: isLowStock ? colors.warning : colors.success,
+                letterSpacing: '-0.02em'
+              }}>
+                {newStock} {getUnitLabel()}
               </span>
             </div>
-            {getNewStock() <= product.minStock && (
-              <p className="text-sm text-red-600 mt-2">
-                ⚠️ El stock quedará por debajo del mínimo ({product.minStock})
-              </p>
+            {isLowStock && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginTop: '12px',
+                paddingTop: '12px',
+                borderTop: `1px solid ${colors.warningBorder}`
+              }}>
+                <FiAlertTriangle size={16} style={{ color: colors.warning }} />
+                <span style={{
+                  fontSize: '12px',
+                  color: colors.warning
+                }}>
+                  El stock quedará por debajo del mínimo ({product.minStock})
+                </span>
+              </div>
             )}
           </div>
         )}
 
         {/* Actions */}
-        <div className="flex gap-3 pt-2">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
+        <div style={{
+          display: 'flex',
+          gap: '12px',
+          paddingTop: '8px',
+          borderTop: `1px solid ${colors.borderColor}`
+        }}>
+          <Button variant="secondary" onClick={onClose} style={{ flex: 1 }}>
             Cancelar
           </Button>
           <Button
             variant="primary"
             onClick={handleConfirm}
-            className="flex-1"
+            style={{ flex: 1 }}
             icon={<FiCheck />}
             disabled={!quantity || parseFloat(quantity) <= 0 || !reason.trim()}
           >
